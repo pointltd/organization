@@ -1,0 +1,58 @@
+services:
+  nginx:
+    image: nginx
+    container_name: organization-point-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www
+      - ./infrastructure/docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    networks:
+      point:
+        aliases:
+          - organization.point.localhost
+  app:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/app/Dockerfile
+    image: organization-point-api
+    container_name: organization-point-api
+    restart: unless-stopped
+    working_dir: /var/www/
+    env_file:
+      - ./infrastructure/docker/app/local.env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - point
+    develop:
+      watch:
+        - path: ./src
+          action: rebuild
+  db:
+    image: mysql:8.0.33
+    container_name: organization-point-db
+    volumes:
+      - ./infrastructure/docker/mysql/init/coded_echo.sql:/docker-entrypoint-initdb.d/coded_echo.sql
+      - ./infrastructure/docker/mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: "point_organization"
+      MYSQL_ROOT_PASSWORD: "test"
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    networks:
+      point:
+        aliases:
+          - organization-point-db
+
+networks:
+  point:
+    external: true
