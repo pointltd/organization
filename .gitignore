@@ -1,3 +1,4 @@
 /.idea
 /infrastructure/docker/mysql/data/*
 /infrastructure/docker/mysql/init/*
+/src/vendor/*

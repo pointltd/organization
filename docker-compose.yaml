@@ -24,7 +24,7 @@ services:
     env_file:
       - ./infrastructure/docker/app/local.env
     volumes:
-        - ./src:/var/www:cached
+      - ./src:/var/www:cached
     depends_on:
       db:
         condition: service_healthy

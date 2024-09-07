@@ -5,8 +5,6 @@ FROM golang:1.22
 # Set destination for COPY
 WORKDIR /var/www
 
-ENV GOPATH=/var/www/.go
-
 # Download Go modules
 COPY ./src/go.mod ./src/go.sum ./
 RUN go mod download
