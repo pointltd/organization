@@ -1,9 +1,16 @@
 package main
 
 import (
-	"github.com/pointltd/organization/internal/server"
+	"github.com/pointltd/organization/internal/app"
+	"log"
 )
 
 func main() {
-	server.Run()
+	a, err := app.NewApp()
+
+	if err != nil {
+		log.Fatalf("failed to init app: %s", err.Error())
+	}
+
+	a.RunServer()
 }
