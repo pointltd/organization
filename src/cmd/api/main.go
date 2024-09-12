@@ -12,5 +12,5 @@ func main() {
 		log.Fatalf("failed to init app: %s", err.Error())
 	}
 
-	a.RunServer()
+	a.RunHttpServer()
 }
