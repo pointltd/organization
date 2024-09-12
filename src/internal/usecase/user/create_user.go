@@ -23,6 +23,6 @@ func NewUseCase(userRepository repository.UserRepository) *useCase {
 	}
 }
 
-func (u useCase) Execute(request CreateUserDto) error {
+func (u useCase) Execute() error {
 	return nil
 }
