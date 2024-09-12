@@ -1,5 +1,7 @@
 package usecase
 
+import "github.com/pointltd/organization/internal/domain/entity"
+
 type CreateUserUseCase interface {
-	Execute() error
+	Execute(userUUID string, info *entity.UserInfo) error
 }

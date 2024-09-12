@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/pointltd/organization/internal/domain/entity"
 	"github.com/pointltd/organization/internal/domain/repository"
 	def "github.com/pointltd/organization/internal/usecase"
 )
@@ -23,6 +24,11 @@ func NewUseCase(userRepository repository.UserRepository) *useCase {
 	}
 }
 
-func (u useCase) Execute() error {
-	return nil
+func (u useCase) Execute(userUUID string, info *entity.UserInfo) error {
+	user := entity.User{
+		UUID: userUUID,
+		Info: *info,
+	}
+
+	return u.userRepository.Save(user)
 }
