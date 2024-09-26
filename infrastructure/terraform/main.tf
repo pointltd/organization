@@ -8,5 +8,5 @@ terraform {
 }
 
 provider "yandex" {
-  zone = "<зона_доступности_по_умолчанию>"
+  zone = "ru-central1-d"
 }
