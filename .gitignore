@@ -2,3 +2,4 @@
 /infrastructure/docker/mysql/data/*
 /infrastructure/docker/mysql/init/*
 /src/vendor/*
+/infrastructure/terraform/.terraform/*
