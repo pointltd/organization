@@ -1,7 +1,17 @@
 NETWORK = point
+APP_NAME = organization
+
+YC_CR_DOMAIN = cr.yandex/crpbvv0uke53s3ief4mk
+
+GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
+GIT_TAG ?= $(shell git rev-parse --short=10 HEAD)
 
 create-network:
 	@docker network ls | grep -w $(NETWORK) || docker network create $(NETWORK)
 
-up:
+#docker
+dkr_%: 	export DOCKER_IMAGE_URL = $(YC_CR_DOMAIN)/$(APP_NAME)
+dkr_%:  export DOCKER_TAG = $(GIT_TAG)
+
+dkr_up:
 	@docker-compose up -d

@@ -15,6 +15,7 @@ services:
         aliases:
           - organization.point.localhost
   app:
+    image: organization-app
     build:
       context: .
       dockerfile: ./infrastructure/docker/app/Dockerfile
