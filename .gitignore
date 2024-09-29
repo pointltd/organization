@@ -3,3 +3,5 @@
 /infrastructure/docker/mysql/init/*
 /src/vendor/*
 /infrastructure/terraform/.terraform/*
+/infrastructure/terraform/terraform.tfstate
+/infrastructure/terraform/terraform.tfstate.*
