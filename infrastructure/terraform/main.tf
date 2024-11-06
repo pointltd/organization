@@ -15,7 +15,7 @@ terraform {
   required_providers {
     yandex = {
       source  = "yandex-cloud/yandex"
-      version = ">= 0.47.0"
+      version = ">= 0.90.0"
     }
   }
 }
@@ -42,6 +42,6 @@ resource "yandex_serverless_container" "organization-app-container" {
   cores              = 1
 
   image {
-    url = "${local.registry_id}/organization-app:organization-app"
+    url = "${local.registry_id}/organization-app:latest"
   }
 }
