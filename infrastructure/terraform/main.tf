@@ -45,14 +45,3 @@ resource "yandex_serverless_container" "organization-app-container" {
     url = "${local.registry_id}/organization-app:organization-app"
   }
 }
-
-resource "yandex_vpc_network" "point-network" {
-  name = "point-network"
-}
-
-resource "yandex_vpc_subnet" "point-subnet" {
-  name           = "point-subnet"
-  zone           = local.zone
-  network_id     = yandex_vpc_network.point-network.id
-  v4_cidr_blocks = ["10.2.0.0/16"]
-}
