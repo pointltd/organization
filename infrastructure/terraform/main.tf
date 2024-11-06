@@ -42,7 +42,7 @@ resource "yandex_serverless_container" "organization-app-container" {
   cores              = 1
 
   image {
-    url = "cr.yandex/crp4640u3tckkugq0upa/organization-app:organization-app"
+    url = "${local.registry_id}/organization-app:organization-app"
   }
 }
 
