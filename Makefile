@@ -15,3 +15,5 @@ dkr_%:  export DOCKER_TAG = $(GIT_TAG)
 
 dkr_up:
 	@docker-compose up -d
+
+yc_auth: export YC_TOKEN=$(yc iam create-token)

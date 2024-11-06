@@ -1,24 +1,19 @@
-# Объявление переменных для конфиденциальных параметров
-
 locals {
   zone             = "ru-central1-a"
   username         = "coded"
   ssh_key_path     = ".ssh/ya_coded_ubuntu.pub"
   target_folder_id = "b1g0k22us62vt6kut949"
   registry_name    = "point-registry"
-  sa_name          = "sa-registry"
   network_name     = "docker-vm-network"
   subnet_name      = "docker-vm-network-subnet-a"
-  vm_name          = "docker-vm"
-  image_id         = "fd87tirk5i8vitv9uuo1"
-  registry_id      = "crpbvv0uke53s3ief4mk"
+  container_name   = "organization-container"
+  image_id         = "crppi5deo87qjhsgaf0c"
+  registry_id      = "cr.yandex/crp4640u3tckkugq0upa"
 }
-
-# Настройка провайдера
 
 terraform {
   required_providers {
-    yandex    = {
+    yandex = {
       source  = "yandex-cloud/yandex"
       version = ">= 0.47.0"
     }
@@ -26,51 +21,38 @@ terraform {
 }
 
 provider "yandex" {
-  zone = local.zone
+  zone      = local.zone
   folder_id = local.target_folder_id
 }
 
-resource "yandex_compute_instance" "vm-1" {
-  name = "from-terraform-vm"
-  platform_id = "standard-v1"
-  zone = "ru-central1-a"
+resource "yandex_iam_service_account" "organization-service-account" {
+  name = "organization-service-account"
+}
 
-  resources {
-    cores  = 2
-    memory = 2
-  }
+resource "yandex_resourcemanager_folder_iam_member" "registry_pull_permission" {
+  folder_id = local.target_folder_id
+  role      = "container-registry.images.puller"
+  member    = "serviceAccount:${yandex_iam_service_account.organization-service-account.id}"
+}
 
-  boot_disk {
-    initialize_params {
-      image_id = local.image_id
-    }
-  }
+resource "yandex_serverless_container" "organization-app-container" {
+  name               = local.container_name
+  service_account_id = yandex_iam_service_account.organization-service-account.id
+  memory             = 512  # Specify memory in MB
+  cores              = 1
 
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = true
-  }
-
-  metadata = {
-    ssh-keys = "ubuntu:${file(".ssh/ya_coded_ubuntu.pub")}"
+  image {
+    url = "cr.yandex/crp4640u3tckkugq0upa/organization-app:organization-app"
   }
 }
 
 resource "yandex_vpc_network" "network-1" {
-  name = "from-terraform-network"
+  name = "container-network"
 }
 
 resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "from-terraform-subnet"
-  zone           = "ru-central1-a"
+  name           = "container-subnet"
+  zone           = local.zone
   network_id     = yandex_vpc_network.network-1.id
   v4_cidr_blocks = ["10.2.0.0/16"]
-}
-
-output "internal_ip_address_vm_1" {
-  value = yandex_compute_instance.vm-1.network_interface.0.ip_address
-}
-
-output "external_ip_address_vm_1" {
-  value = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
 }
