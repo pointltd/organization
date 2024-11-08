@@ -1,22 +1,10 @@
-# syntax=docker/dockerfile:1
+FROM golang:latest AS build
 
-FROM golang:1.22
-
-# Set destination for COPY
-WORKDIR /var/www
-
-# Download Go modules
-COPY ./src/go.mod ./src/go.sum ./
-RUN go mod download
-
-# Copy the source code
+WORKDIR /app
 COPY ./src ./
+RUN GOARCH=amd64 go build -a -tags netgo -ldflags '-w -extldflags "-static"' -o organization-app ./cmd/api
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /organization ./cmd/api
+FROM scratch
+COPY --from=build /app/organization-app /organization-app
 
-# Expose port 9000
-EXPOSE 9000
-
-# Run
-CMD [ "/organization" ]
+ENTRYPOINT ["/organization-app"]
