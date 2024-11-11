@@ -14,7 +14,13 @@ dkr_%: 	export DOCKER_IMAGE_URL = $(YC_CR_DOMAIN)/$(APP_NAME)
 dkr_%:  export DOCKER_TAG = $(GIT_TAG)
 
 dkr_up:
-	@docker-compose up -d
+	@docker compose --file docker-compose.local.yaml up
+
+dkr_down:
+	@docker compose --file docker-compose.local.yaml down
+
+dkr_build:
+	@docker compose --file docker-compose.local.yaml build
 
 dkr_push:
 	@docker tag organization-app cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
