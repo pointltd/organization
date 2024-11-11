@@ -18,6 +18,23 @@ terraform {
       version = ">= 0.90.0"
     }
   }
+
+  backend "s3" {
+    endpoints = {
+      s3 = "https://storage.yandexcloud.net",
+#       dynamodb = "https://docapi.serverless.yandexcloud.net/ru-central1/b1gqteti3n0acn3o5mge/etnkuhk8r01g859r9fd2"
+    }
+    bucket = "terraform-state-s3-bucket-test"
+    key    = "organization/terraform.tfstate"
+    region = "ru-central1"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+
+#     dynamodb_table = "terraform-state-lock"
+  }
 }
 
 provider "yandex" {
@@ -25,19 +42,19 @@ provider "yandex" {
   folder_id = local.target_folder_id
 }
 
-resource "yandex_iam_service_account" "organization-service-account" {
-  name = "organization-service-account"
+resource "yandex_iam_service_account" "organization-sa" {
+  name = "organization-sa"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "registry_pull_permission" {
   folder_id = local.target_folder_id
   role      = "container-registry.images.puller"
-  member    = "serviceAccount:${yandex_iam_service_account.organization-service-account.id}"
+  member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
 resource "yandex_serverless_container" "organization-app-container" {
   name               = local.container_name
-  service_account_id = yandex_iam_service_account.organization-service-account.id
+  service_account_id = yandex_iam_service_account.organization-sa.id
   memory             = 512  # Specify memory in MB
   cores              = 1
 
