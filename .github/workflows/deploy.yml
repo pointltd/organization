@@ -30,8 +30,6 @@ jobs:
   terraform:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
-    env:
-      YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
 
     steps:
       - name: Checkout
@@ -44,6 +42,8 @@ jobs:
 
       - name: Login to Yandex Cloud
         uses: actions/github-script@v7
+        env:
+          YC_KEY_TEST: ${{ secrets.YC_KEY_TEST }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -66,6 +66,8 @@ jobs:
       - name: Terraform Init
         run: terraform init
         working-directory: ./infrastructure/terraform
+        env:
+          YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
 
       - name: Terraform Plan
         run: terraform plan
