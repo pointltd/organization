@@ -47,18 +47,21 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            cat <<EOF > ~/.terraformrc
-            provider_installation {
-              network_mirror {
-                url = "https://terraform-mirror.yandexcloud.net/"
-                include = ["registry.terraform.io/*/*"]
-              }
-              direct {
-                exclude = ["registry.terraform.io/*/*"]
-              }
-            }
-            EOF
-            echo YC_KEY_TEST > /tmp/sa-key.json
+            const fs = require('fs');
+            const key = process.env.YC_KEY_TEST;
+            fs.writeFileSync('/tmp/sa-key.json', key);
+            fs.writeFileSync(
+              '/home/runner/.terraformrc',
+              `provider_installation {
+                network_mirror {
+                  url = "https://terraform-mirror.yandexcloud.net/"
+                  include = ["registry.terraform.io/*/*"]
+                }
+                direct {
+                  exclude = ["registry.terraform.io/*/*"]
+                }
+              }`
+            );
 
       - name: Terraform Init
         run: terraform init
