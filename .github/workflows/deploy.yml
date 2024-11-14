@@ -25,12 +25,3 @@ jobs:
           file: ./infrastructure/docker/app/Dockerfile
           push: true
           tags: cr.yandex/crp4640u3tckkugq0upa/organization-app:${{ github.sha }}
-
-      - name: Build, tag, and push image to Yandex Cloud Container Registry
-        env:
-          CR_REGISTRY: crp4640u3tckkugq0upa
-          CR_REPOSITORY: organization-app
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
