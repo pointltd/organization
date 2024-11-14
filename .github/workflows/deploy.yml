@@ -30,6 +30,8 @@ jobs:
   terraform:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
+    env:
+      YC_SERVICE_ACCOUNT_KEY_FILE: /tmp/sa-key.json
 
     steps:
       - name: Checkout
@@ -38,7 +40,25 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: "1.1.7"
+          terraform_version: "1.9.8"
+
+      - name: Login to Yandex Cloud
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            cat <<EOF > ~/.terraformrc
+            provider_installation {
+              network_mirror {
+                url = "https://terraform-mirror.yandexcloud.net/"
+                include = ["registry.terraform.io/*/*"]
+              }
+              direct {
+                exclude = ["registry.terraform.io/*/*"]
+              }
+            }
+            EOF
+            echo YC_KEY_TEST > /tmp/sa-key.json
 
       - name: Terraform Init
         run: terraform init
