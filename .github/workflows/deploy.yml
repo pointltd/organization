@@ -7,6 +7,7 @@ on:
 
 jobs:
   docker:
+    name: Prepare Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,3 +26,29 @@ jobs:
           file: ./infrastructure/docker/app/Dockerfile
           push: true
           tags: cr.yandex/crp4640u3tckkugq0upa/organization-app:${{ github.sha }}
+
+  terraform:
+    name: Deploy infrastructure
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./infrastructure/terraform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
