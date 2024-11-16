@@ -10,21 +10,18 @@ create-network:
 	@docker network ls | grep -w $(NETWORK) || docker network create $(NETWORK)
 
 #docker
-dkr_%: 	export DOCKER_IMAGE_URL = $(YC_CR_DOMAIN)/$(APP_NAME)
-dkr_%:  export DOCKER_TAG = $(GIT_TAG)
-
-dkr_up:
+dkr-up:
 	@docker compose --file docker-compose.local.yaml up
 
-dkr_down:
+dkr-down:
 	@docker compose --file docker-compose.local.yaml down
 
-dkr_build:
+dkr-build:
 	@docker compose --file docker-compose.local.yaml build
 
-dkr_push:
+dkr-push:
 	@docker tag organization-app cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
 	@docker push cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
 
-yc_auth:
+yc-auth:
 	@export YC_TOKEN=$$(yc iam create-token)
