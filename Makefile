@@ -26,5 +26,8 @@ dkr-push:
 	@docker tag organization-app cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
 	@docker push cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
 
+dkr-sh:
+	@docker exec -it organization-point-api sh
+
 yc-auth:
 	@export YC_TOKEN=$$(yc iam create-token)

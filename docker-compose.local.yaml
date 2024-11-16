@@ -19,6 +19,7 @@ services:
     build:
       context: .
       dockerfile: ./infrastructure/docker/app/Dockerfile
+      target: dev
     container_name: organization-point-api
     restart: unless-stopped
     working_dir: /var/www/
