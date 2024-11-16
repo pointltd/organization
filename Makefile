@@ -19,6 +19,9 @@ dkr-down:
 dkr-build:
 	@docker compose --file docker-compose.local.yaml build
 
+dkr-run:
+	@docker compose --file docker-compose.local.yaml up --build
+
 dkr-push:
 	@docker tag organization-app cr.yandex/crp4640u3tckkugq0upa/organization-app:latest
 	@docker push cr.yandex/crp4640u3tckkugq0upa/organization-app:latest

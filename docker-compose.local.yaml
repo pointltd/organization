@@ -36,18 +36,19 @@ services:
         - path: ./src
           action: rebuild
   db:
-    image: mysql:8.0.33
+    image: postgres:17.1
     container_name: organization-point-db
     volumes:
-      - ./infrastructure/docker/mysql/init/coded_echo.sql:/docker-entrypoint-initdb.d/coded_echo.sql
-      - ./infrastructure/docker/mysql/data:/var/lib/mysql
+      - ./infrastructure/docker/postgres/init/point_organization.sql:/docker-entrypoint-initdb.d/point_organization.sql
+      - ./infrastructure/docker/postgres/data:/var/lib/postgresql/data
     environment:
-      MYSQL_DATABASE: "point_organization"
-      MYSQL_ROOT_PASSWORD: "test"
+      POSTGRES_DB: "point_organization"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "test"
     ports:
-      - "3306:3306"
+      - "5432:5432"
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       timeout: 20s
       retries: 10
     networks:
