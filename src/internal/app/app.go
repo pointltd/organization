@@ -1,17 +1,19 @@
 package app
 
 import (
+	"context"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pointltd/organization/internal/infrastructure/route"
 	"os"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type App struct {
 	serviceProvider *serviceProvider
+	db              *pgxpool.Pool
 }
 
 func NewApp() (*App, error) {
@@ -29,6 +31,16 @@ func NewApp() (*App, error) {
 func (a *App) init() error {
 	a.serviceProvider = newServiceProvider()
 	return nil
+}
+
+func (a *App) initDatabase() {
+	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		os.Exit(1)
+	}
+	defer dbpool.Close()
+
+	a.db = dbpool
 }
 
 func (a *App) RunHttpServer() {
