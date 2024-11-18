@@ -5,6 +5,8 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pointltd/organization/internal/infrastructure/route"
 	"os"
+
+	"github.com/jackc/pgx/v5"
 )
 
 type App struct {
