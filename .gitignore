@@ -1,6 +1,6 @@
 /.idea
-/infrastructure/docker/postgres/data/*
-/infrastructure/docker/postgres/init/*
+/infrastructure/docker/database/data/*
+/infrastructure/docker/database/init/*
 /src/vendor/*
 /infrastructure/terraform/.terraform/*
 /infrastructure/terraform/terraform.tfstate
