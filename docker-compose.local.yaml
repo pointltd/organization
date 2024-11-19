@@ -40,8 +40,7 @@ services:
     image: postgres:17.1
     container_name: organization-point-db
     volumes:
-      - ./infrastructure/docker/postgres/init/point_organization.sql:/docker-entrypoint-initdb.d/point_organization.sql
-      - ./infrastructure/docker/postgres/data:/var/lib/postgresql/data
+      - ./infrastructure/docker/database/data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: "point_organization"
       POSTGRES_USER: "postgres"
