@@ -37,18 +37,18 @@ services:
         - path: ./src
           action: rebuild
   db:
-    image: postgres:17.1
+    image: postgres:latest
     container_name: organization-point-db
     volumes:
       - ./infrastructure/docker/database/data:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: "point_organization"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "test"
+      POSTGRES_USER: organization_user
+      POSTGRES_PASSWORD: organization_password
+      POSTGRES_DB: point_organization
     ports:
       - "5432:5432"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U organization_user -d point_organization"  ]
       timeout: 20s
       retries: 10
     networks:
