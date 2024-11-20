@@ -2,6 +2,8 @@ package entity
 
 type User struct {
 	ID        string    `json:"id"`
+	Password  string    `json:"password"`
+	Contacts  Contacts  `json:"contacts"`
 	Info      UserInfo  `json:"info"`
 	UserStamp UserStamp `json:"user_stamp"`
 	Timestamp Timestamp `json:"timestamp"`
@@ -10,5 +12,9 @@ type User struct {
 type UserInfo struct {
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
+}
+
+type Contacts struct {
+	Phone string `json:"phone"`
+	Email string `json:"email"`
 }

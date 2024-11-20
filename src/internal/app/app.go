@@ -29,8 +29,8 @@ func NewApp() (*App, error) {
 }
 
 func (a *App) init() error {
-	a.serviceProvider = newServiceProvider()
 	a.initDatabase()
+	a.serviceProvider = newServiceProvider(a.db)
 	return nil
 }
 
@@ -40,7 +40,6 @@ func (a *App) initDatabase() {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 	}
 	log.Println("Connected to database")
-	defer dbpool.Close()
 
 	a.db = dbpool
 }

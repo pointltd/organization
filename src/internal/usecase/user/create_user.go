@@ -24,9 +24,9 @@ func NewUseCase(userRepository repository.UserRepository) *useCase {
 	}
 }
 
-func (u useCase) Execute(userUUID string, info *entity.UserInfo) error {
+func (u useCase) Execute(userID string, info *entity.UserInfo) error {
 	user := entity.User{
-		UUID: userUUID,
+		ID:   userID,
 		Info: *info,
 	}
 
