@@ -1,7 +1,7 @@
 package entity
 
 type User struct {
-	UUID      string    `json:"uuid"`
+	ID        string    `json:"id"`
 	Info      UserInfo  `json:"info"`
 	UserStamp UserStamp `json:"user_stamp"`
 	Timestamp Timestamp `json:"timestamp"`

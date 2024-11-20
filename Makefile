@@ -31,3 +31,9 @@ dkr-sh:
 
 yc-auth:
 	@export YC_TOKEN=$$(yc iam create-token)
+
+db-migrate:
+	@docker run -v ./infrastructure/docker/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgresql://organization_user:organization_password@localhost:5432/point_organization?sslmode=disable up
+
+db-rollback:
+	@docker run -v ./infrastructure/docker/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgresql://organization_user:organization_password@localhost:5432/point_organization?sslmode=disable down 1
