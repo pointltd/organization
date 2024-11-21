@@ -6,12 +6,16 @@ import (
 	userRepository "github.com/pointltd/organization/internal/domain/repository/user"
 	"github.com/pointltd/organization/internal/infrastructure/controller"
 	userController "github.com/pointltd/organization/internal/infrastructure/controller/user"
+	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
+	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
 	"github.com/pointltd/organization/internal/usecase"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 )
 
 type serviceProvider struct {
 	db *pgxpool.Pool
+
+	userMapper mapper.UserMapper
 
 	userRepository repository.UserRepository
 
@@ -27,9 +31,17 @@ func newServiceProvider(db *pgxpool.Pool) *serviceProvider {
 	}
 }
 
+func (s *serviceProvider) UserMapper() mapper.UserMapper {
+	if s.userMapper == nil {
+		s.userMapper = userMapper.NewUserMapper()
+	}
+
+	return s.userMapper
+}
+
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
-		s.userRepository = userRepository.NewRepository(s.db)
+		s.userRepository = userRepository.NewRepository(s.db, s.UserMapper())
 	}
 
 	return s.userRepository
