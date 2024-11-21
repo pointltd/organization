@@ -6,7 +6,7 @@ import (
 	def "github.com/pointltd/organization/internal/usecase"
 )
 
-var _ def.CreateUserUseCase = (*useCase)(nil)
+var _ def.CreateUserUseCase = (*createUserUseCase)(nil)
 
 type CreateUserDto struct {
 	FirstName string `json:"first_name"`
@@ -14,17 +14,17 @@ type CreateUserDto struct {
 	Email     string `json:"email"`
 }
 
-type useCase struct {
+type createUserUseCase struct {
 	userRepository repository.UserRepository
 }
 
-func NewUseCase(userRepository repository.UserRepository) *useCase {
-	return &useCase{
+func NewUseCase(userRepository repository.UserRepository) *createUserUseCase {
+	return &createUserUseCase{
 		userRepository: userRepository,
 	}
 }
 
-func (u useCase) Execute(userID string, info *entity.UserInfo) error {
+func (u createUserUseCase) Execute(userID string, info *entity.UserInfo) error {
 	user := entity.User{
 		ID:   userID,
 		Info: *info,
