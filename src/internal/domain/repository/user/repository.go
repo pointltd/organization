@@ -66,6 +66,11 @@ func (r *repository) GetAll() ([]entity.User, error) {
 		users = append(users, user)
 		log.Println("User: ", user)
 	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return users, nil
 }
 
