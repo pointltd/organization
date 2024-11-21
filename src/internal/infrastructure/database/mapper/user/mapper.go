@@ -17,18 +17,19 @@ func NewUserMapper() *userMapper {
 
 func (m *userMapper) MapRowToUser(rows pgx.Rows) (entity.User, error) {
 	var user entity.User
-	var firstName, createdById, updatedById, deletedById sql.NullString
+	var firstName, phone, createdById, updatedById, deletedById sql.NullString
+	var deletedAt sql.NullTime
 
 	err := rows.Scan(
 		&user.ID,
-		&user.Password,
-		&user.Contacts.Email,
-		&user.Contacts.Phone,
 		&firstName,
 		&user.Info.LastName,
+		&user.Contacts.Email,
+		&user.Password,
+		&phone,
 		&user.Timestamp.CreatedAt,
 		&user.Timestamp.UpdatedAt,
-		&user.Timestamp.DeletedAt,
+		&deletedAt,
 		&createdById,
 		&updatedById,
 		&deletedById,
@@ -37,8 +38,14 @@ func (m *userMapper) MapRowToUser(rows pgx.Rows) (entity.User, error) {
 		return user, err
 	}
 
+	if phone.Valid {
+		user.Contacts.Phone = phone.String
+	}
 	if firstName.Valid {
 		user.Info.FirstName = firstName.String
+	}
+	if deletedAt.Valid {
+		user.Timestamp.DeletedAt = &deletedAt.Time
 	}
 	if createdById.Valid {
 		user.UserStamp.CreatedById = createdById.String
