@@ -39,7 +39,7 @@ func (m *userMapper) MapRowToUser(rows pgx.Rows) (entity.User, error) {
 	}
 
 	if phone.Valid {
-		user.Contacts.Phone = phone.String
+		user.Contacts.Phone = &phone.String
 	}
 	if firstName.Valid {
 		user.Info.FirstName = firstName.String
@@ -48,13 +48,13 @@ func (m *userMapper) MapRowToUser(rows pgx.Rows) (entity.User, error) {
 		user.Timestamp.DeletedAt = &deletedAt.Time
 	}
 	if createdById.Valid {
-		user.UserStamp.CreatedById = createdById.String
+		user.UserStamp.CreatedById = &createdById.String
 	}
 	if updatedById.Valid {
-		user.UserStamp.UpdatedById = updatedById.String
+		user.UserStamp.UpdatedById = &updatedById.String
 	}
 	if deletedById.Valid {
-		user.UserStamp.DeletedById = deletedById.String
+		user.UserStamp.DeletedById = &deletedById.String
 	}
 
 	return user, nil
