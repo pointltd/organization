@@ -2,7 +2,7 @@ SET TIME ZONE 'UTC';
 
 CREATE TABLE users
 (
-    id            uuid PRIMARY KEY         DEFAULT gen_random_uuid(),
+    id            uuid PRIMARY KEY    NOT NULL,
     first_name    VARCHAR(255)        NOT NULL,
     last_name     VARCHAR(255)        NULL,
     email         VARCHAR(255) UNIQUE NOT NULL,
