@@ -2,10 +2,12 @@ package user
 
 import (
 	"context"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pointltd/organization/internal/domain/entity"
 	def "github.com/pointltd/organization/internal/domain/repository"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
+	"github.com/pointltd/organization/internal/infrastructure/database/model"
 	"log"
 )
 
@@ -30,19 +32,21 @@ func (r *repository) GetAll() ([]entity.User, error) {
 	}
 
 	var users []entity.User
-	for rows.Next() {
-		user, err := r.userMapper.MapRowToUser(rows)
+
+	all, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.User])
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, row := range all {
+		user, err := r.userMapper.MapModelToEntity(row)
 
 		if err != nil {
 			return nil, err
 		}
 
 		users = append(users, user)
-		log.Println("User: ", user)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, err
 	}
 
 	return users, nil

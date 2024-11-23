@@ -1,10 +1,9 @@
 package user
 
 import (
-	"database/sql"
-	"github.com/jackc/pgx/v5"
 	"github.com/pointltd/organization/internal/domain/entity"
 	_def "github.com/pointltd/organization/internal/infrastructure/database/mapper"
+	"github.com/pointltd/organization/internal/infrastructure/database/model"
 )
 
 var _ _def.UserMapper = (*userMapper)(nil)
@@ -15,46 +14,49 @@ func NewUserMapper() *userMapper {
 	return &userMapper{}
 }
 
-func (m *userMapper) MapRowToUser(rows pgx.Rows) (entity.User, error) {
-	var user entity.User
-	var firstName, phone, createdById, updatedById, deletedById sql.NullString
-	var deletedAt sql.NullTime
-
-	err := rows.Scan(
-		&user.ID,
-		&firstName,
-		&user.Info.LastName,
-		&user.Contacts.Email,
-		&user.Password,
-		&phone,
-		&user.Timestamp.CreatedAt,
-		&user.Timestamp.UpdatedAt,
-		&deletedAt,
-		&createdById,
-		&updatedById,
-		&deletedById,
-	)
-	if err != nil {
-		return user, err
+func (m *userMapper) MapModelToEntity(model model.User) (entity.User, error) {
+	var timestamp = entity.Timestamp{
+		CreatedAt: model.CreatedAt,
+		UpdatedAt: model.UpdatedAt,
 	}
 
-	if phone.Valid {
-		user.Contacts.Phone = &phone.String
+	if model.DeletedAt.Valid {
+		timestamp.DeletedAt = &model.DeletedAt.Time
 	}
-	if firstName.Valid {
-		user.Info.FirstName = firstName.String
+
+	var contactInfo = entity.ContactInfo{
+		Email: model.Email,
 	}
-	if deletedAt.Valid {
-		user.Timestamp.DeletedAt = &deletedAt.Time
+
+	if model.Phone.Valid {
+		contactInfo.Phone = &model.Phone.String
 	}
-	if createdById.Valid {
-		user.UserStamp.CreatedById = &createdById.String
+
+	var userStamp = entity.UserStamp{}
+
+	if model.CreatedById.Valid {
+		userStamp.CreatedById = &model.CreatedById.String
 	}
-	if updatedById.Valid {
-		user.UserStamp.UpdatedById = &updatedById.String
+	if model.UpdatedById.Valid {
+		userStamp.UpdatedById = &model.UpdatedById.String
 	}
-	if deletedById.Valid {
-		user.UserStamp.DeletedById = &deletedById.String
+	if model.DeletedById.Valid {
+		userStamp.DeletedById = &model.DeletedById.String
+	}
+
+	var user = entity.User{
+		ID:       model.ID,
+		Password: model.Password,
+		Info: entity.UserInfo{
+			FirstName: model.FirstName,
+		},
+		Contacts:  contactInfo,
+		Timestamp: timestamp,
+		UserStamp: userStamp,
+	}
+
+	if model.LastName.Valid {
+		user.Info.LastName = &model.LastName.String
 	}
 
 	return user, nil
