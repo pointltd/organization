@@ -21,7 +21,7 @@ RUN go mod vendor
 
 RUN go install github.com/air-verse/air@latest
 
-ENTRYPOINT ["air", "-build.cmd", "go build -o organization-app ./cmd/api", "-build.bin", "./organization-app"]
+ENTRYPOINT ["air", "-build.cmd", "go build -o ./bin/organization-app ./cmd/api", "-build.bin", "./bin/organization-app"]
 
 FROM scratch AS prod
 COPY --from=build /app/organization-app /organization-app
