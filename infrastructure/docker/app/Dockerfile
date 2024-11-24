@@ -24,6 +24,9 @@ RUN go install github.com/air-verse/air@latest
 ENTRYPOINT ["air", "-build.cmd", "go build -o ./bin/organization-app ./cmd/api", "-build.bin", "./bin/organization-app"]
 
 FROM scratch AS prod
+
+WORKDIR /app
+
 COPY --from=build /app/organization-app /organization-app
 
 ENTRYPOINT ["/organization-app"]
