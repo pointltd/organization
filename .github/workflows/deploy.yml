@@ -91,6 +91,6 @@ jobs:
 
       - name: Migrate database
         run: |
-          docker run -v ./infrastructure/docker/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database {{env.DATABASE_URL}} up
+          docker run -v ./infrastructure/docker/database/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database ${DATABASE_URL} up
 
 
