@@ -42,11 +42,7 @@ func (r *repository) GetAll() ([]entity.User, error) {
 	}
 
 	for _, row := range all {
-		user, err := r.userMapper.MapModelToEntity(row)
-
-		if err != nil {
-			return nil, err
-		}
+		user := r.userMapper.MapModelToEntity(row)
 
 		users = append(users, user)
 	}
@@ -62,15 +58,9 @@ func (r *repository) Save(user entity.User) error {
 
 	user.ID = id.String()
 
-	query := `INSERT INTO users (id, password, first_name, last_name, email) VALUES (@id, @password, @first_name, @last_name, @email) RETURNING *`
+	query := `INSERT INTO users (id, password, first_name, email) VALUES (@id, @password, @first_name, @email) RETURNING *`
 
-	args := pgx.NamedArgs{
-		"id":         id.String(),
-		"password":   user.Password,
-		"first_name": user.Info.FirstName,
-		"last_name":  user.Info.LastName,
-		"email":      user.Contacts.Email,
-	}
+	args := r.userMapper.MapEntityToArg(user)
 
 	_, err = r.db.Query(context.Background(), query, args)
 

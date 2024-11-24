@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/jackc/pgx/v5"
 	"github.com/pointltd/organization/internal/domain/entity"
 	_def "github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	"github.com/pointltd/organization/internal/infrastructure/database/model"
@@ -14,7 +15,7 @@ func NewUserMapper() *userMapper {
 	return &userMapper{}
 }
 
-func (m *userMapper) MapModelToEntity(model model.User) (entity.User, error) {
+func (m *userMapper) MapModelToEntity(model model.User) entity.User {
 	var timestamp = entity.Timestamp{
 		CreatedAt: model.CreatedAt,
 		UpdatedAt: model.UpdatedAt,
@@ -59,5 +60,40 @@ func (m *userMapper) MapModelToEntity(model model.User) (entity.User, error) {
 		user.Info.LastName = &model.LastName.String
 	}
 
-	return user, nil
+	return user
+}
+
+func (m *userMapper) MapEntityToArg(user entity.User) pgx.NamedArgs {
+	args := pgx.NamedArgs{
+		"id":         user.ID,
+		"password":   user.Password,
+		"first_name": user.Info.FirstName,
+		"email":      user.Contacts.Email,
+	}
+
+	if user.Info.LastName != nil {
+		args["last_name"] = *user.Info.LastName
+	}
+
+	if user.Contacts.Phone != nil {
+		args["phone"] = *user.Contacts.Phone
+	}
+
+	if user.Timestamp.DeletedAt != nil {
+		args["deleted_at"] = *user.Timestamp.DeletedAt
+	}
+
+	if user.UserStamp.CreatedById != nil {
+		args["created_by_id"] = *user.UserStamp.CreatedById
+	}
+
+	if user.UserStamp.UpdatedById != nil {
+		args["updated_by_id"] = *user.UserStamp.UpdatedById
+	}
+
+	if user.UserStamp.DeletedById != nil {
+		args["deleted_by_id"] = *user.UserStamp.DeletedById
+	}
+
+	return args
 }
