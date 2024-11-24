@@ -62,6 +62,13 @@ resource "yandex_serverless_container" "organization-app-container" {
   memory             = 512  # Specify memory in MB
   cores              = 1
 
+  secrets {
+    environment_variable = "DATABASE_URL"
+    id                   = "e6q5ov5vhuern7sfjg1c"
+    key                  = "organization-database-url"
+    version_id           = "e6q93aplhpcmlou5fu8g"
+  }
+
   image {
     url = "${local.registry_id}/organization-app:${var.ORGANIZATION_IMAGE_TAG}"
   }
