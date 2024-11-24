@@ -2,11 +2,11 @@ package user
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/pointltd/organization/internal/data"
 	"github.com/pointltd/organization/internal/domain/entity"
 	"github.com/pointltd/organization/internal/domain/repository"
 	def "github.com/pointltd/organization/internal/usecase"
+	"github.com/pointltd/organization/pkg/password"
 	"log"
 	"time"
 )
@@ -24,11 +24,6 @@ func NewUseCase(userRepository repository.UserRepository) *createUserUseCase {
 }
 
 func (u createUserUseCase) Execute(dto data.CreateUserDTO) (entity.User, error) {
-	id, err := uuid.NewV7()
-	if err != nil {
-		log.Fatal(fmt.Sprintf("error generating user UUID: %v\n", err))
-	}
-
 	info := entity.UserInfo{
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
@@ -43,12 +38,20 @@ func (u createUserUseCase) Execute(dto data.CreateUserDTO) (entity.User, error) 
 		UpdatedAt: time.Now(),
 	}
 
+	hashedPassword, err := password.HashPassword(dto.Password)
+
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error hashing password: %v\n", err))
+	}
+
 	user := entity.User{
-		ID:        id.String(),
+		Password:  hashedPassword,
 		Info:      info,
 		Contacts:  contacts,
 		Timestamp: timestamps,
 	}
+
+	err = u.userRepository.Save(user)
 
 	return user, nil
 }

@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pointltd/organization/internal/domain/entity"
@@ -53,5 +55,12 @@ func (r *repository) GetAll() ([]entity.User, error) {
 }
 
 func (r *repository) Save(user entity.User) error {
+	id, err := uuid.NewV7()
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error generating user UUID: %v\n", err))
+	}
+
+	user.ID = id.String()
+
 	return nil
 }
