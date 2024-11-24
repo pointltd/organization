@@ -2,7 +2,6 @@ package model
 
 import (
 	"database/sql"
-	"time"
 )
 
 type User struct {
@@ -12,8 +11,8 @@ type User struct {
 	Email       string         `db:"email"`
 	Password    string         `db:"password"`
 	Phone       sql.NullString `db:"phone"`
-	CreatedAt   time.Time      `db:"created_at"`
-	UpdatedAt   time.Time      `db:"updated_at"`
+	CreatedAt   sql.NullTime   `db:"created_at"`
+	UpdatedAt   sql.NullTime   `db:"updated_at"`
 	DeletedAt   sql.NullTime   `db:"deleted_at"`
 	CreatedById sql.NullString `db:"created_by_id"`
 	UpdatedById sql.NullString `db:"updated_by_id"`

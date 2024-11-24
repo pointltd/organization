@@ -34,8 +34,8 @@ func (u createUserUseCase) Execute(dto data.CreateUserDTO) (entity.User, error) 
 	}
 
 	timestamps := entity.Timestamp{
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		CreatedAt: func(t time.Time) *time.Time { return &t }(time.Now()),
+		UpdatedAt: func(t time.Time) *time.Time { return &t }(time.Now()),
 	}
 
 	hashedPassword, err := password.HashPassword(dto.Password)

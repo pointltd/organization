@@ -16,9 +16,14 @@ func NewUserMapper() *userMapper {
 }
 
 func (m *userMapper) MapModelToEntity(model model.User) entity.User {
-	var timestamp = entity.Timestamp{
-		CreatedAt: model.CreatedAt,
-		UpdatedAt: model.UpdatedAt,
+	var timestamp = entity.Timestamp{}
+
+	if model.CreatedAt.Valid {
+		timestamp.CreatedAt = &model.CreatedAt.Time
+	}
+
+	if model.UpdatedAt.Valid {
+		timestamp.UpdatedAt = &model.UpdatedAt.Time
 	}
 
 	if model.DeletedAt.Valid {
@@ -77,6 +82,14 @@ func (m *userMapper) MapEntityToArg(user entity.User) pgx.NamedArgs {
 
 	if user.Contacts.Phone != nil {
 		args["phone"] = *user.Contacts.Phone
+	}
+
+	if user.Timestamp.CreatedAt != nil {
+		args["created_at"] = *user.Timestamp.CreatedAt
+	}
+
+	if user.Timestamp.UpdatedAt != nil {
+		args["updated_at"] = *user.Timestamp.UpdatedAt
 	}
 
 	if user.Timestamp.DeletedAt != nil {
