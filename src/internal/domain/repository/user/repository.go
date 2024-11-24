@@ -62,5 +62,13 @@ func (r *repository) Save(user entity.User) error {
 
 	user.ID = id.String()
 
+	query := `INSERT INTO users (id, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5)`
+
+	_, err = r.db.Exec(context.Background(), query, id, user.Password, user.Info.FirstName, user.Info.LastName, user.Contacts.Email)
+
+	if err != nil {
+		return fmt.Errorf("unable to insert row: %w", err)
+	}
+
 	return nil
 }
