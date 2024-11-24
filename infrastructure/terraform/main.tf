@@ -6,7 +6,7 @@ locals {
   registry_name    = "point-registry"
   network_name     = "docker-vm-network"
   subnet_name      = "docker-vm-network-subnet-a"
-  container_name   = "organization-container"
+  container_name   = "organization-app"
   image_id         = "crppi5deo87qjhsgaf0c"
   registry_id      = "cr.yandex/crp4640u3tckkugq0upa"
 }
@@ -52,6 +52,10 @@ resource "yandex_resourcemanager_folder_iam_member" "registry_pull_permission" {
   member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
+variable "ORGANIZATION_IMAGE_TAG" {
+  default = "latest"
+}
+
 resource "yandex_serverless_container" "organization-app-container" {
   name               = local.container_name
   service_account_id = yandex_iam_service_account.organization-sa.id
@@ -59,6 +63,6 @@ resource "yandex_serverless_container" "organization-app-container" {
   cores              = 1
 
   image {
-    url = "${local.registry_id}/organization-app:latest"
+    url = "${local.registry_id}/organization-app:${var.ORGANIZATION_IMAGE_TAG}"
   }
 }
