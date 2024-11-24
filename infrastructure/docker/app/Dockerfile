@@ -27,6 +27,6 @@ FROM scratch AS prod
 
 WORKDIR /app
 
-COPY --from=build /app/organization-app /organization-app
+COPY --from=build /app/organization-app ./
 
-ENTRYPOINT ["/organization-app"]
+CMD ["/app/organization-app"]

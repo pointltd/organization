@@ -20,6 +20,7 @@ dkr-build:
 	@docker compose --file docker-compose.local.yaml build
 
 dkr-run:
+	@docker compose --file docker-compose.local.yaml down
 	@docker compose --file docker-compose.local.yaml up --build
 
 dkr-push:
