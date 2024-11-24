@@ -4,10 +4,10 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pointltd/organization/internal/domain/repository"
 	userRepository "github.com/pointltd/organization/internal/domain/repository/user"
-	"github.com/pointltd/organization/internal/infrastructure/controller"
-	userController "github.com/pointltd/organization/internal/infrastructure/controller/user"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
+	"github.com/pointltd/organization/internal/infrastructure/http/controller"
+	userController "github.com/pointltd/organization/internal/infrastructure/http/controller/user"
 	"github.com/pointltd/organization/internal/usecase"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 )

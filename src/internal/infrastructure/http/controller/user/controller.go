@@ -1,7 +1,7 @@
 package user
 
 import (
-	def "github.com/pointltd/organization/internal/infrastructure/controller"
+	def "github.com/pointltd/organization/internal/infrastructure/http/controller"
 	"github.com/pointltd/organization/internal/usecase"
 )
 

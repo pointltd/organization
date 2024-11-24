@@ -2,10 +2,12 @@ package app
 
 import (
 	"context"
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pointltd/organization/internal/infrastructure/route"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -14,6 +16,17 @@ import (
 type App struct {
 	serviceProvider *serviceProvider
 	db              *pgxpool.Pool
+}
+
+type Validator struct {
+	validator *validator.Validate
+}
+
+func (cv *Validator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
 }
 
 func NewApp() (*App, error) {
@@ -47,6 +60,8 @@ func (a *App) initDatabase() {
 func (a *App) RunHttpServer() {
 	e := echo.New()
 
+	// Validator
+	e.Validator = &Validator{validator: validator.New()}
 	// Middlewares
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
