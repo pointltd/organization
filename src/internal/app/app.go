@@ -5,7 +5,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/pointltd/organization/internal/infrastructure/route"
+	"github.com/pointltd/organization/internal/infrastructure/http/route"
 	"log"
 	"net/http"
 	"os"
