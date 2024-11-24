@@ -2,15 +2,28 @@ package main
 
 import (
 	"github.com/pointltd/organization/internal/app"
-	"log"
+	"os"
+
+	"log/slog"
 )
 
 func main() {
-	a, err := app.NewApp()
+	logger := initLogger()
+
+	a, err := app.NewApp(logger)
 
 	if err != nil {
-		log.Fatalf("failed to init app: %s", err.Error())
+		logger.Error("failed to init app: %s", err.Error())
+		return
 	}
 
 	a.RunHttpServer()
+}
+
+func initLogger() *slog.Logger {
+	if os.Getenv("ENV") == "local" {
+		return slog.New(slog.NewTextHandler(os.Stdout, nil))
+	}
+
+	return slog.New(slog.NewJSONHandler(os.Stdout, nil))
 }

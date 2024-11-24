@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pointltd/organization/internal/infrastructure/http/route"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 
@@ -16,6 +16,7 @@ import (
 type App struct {
 	serviceProvider *serviceProvider
 	db              *pgxpool.Pool
+	logger          *slog.Logger
 }
 
 type Validator struct {
@@ -29,8 +30,10 @@ func (cv *Validator) Validate(i interface{}) error {
 	return nil
 }
 
-func NewApp() (*App, error) {
-	a := &App{}
+func NewApp(logger *slog.Logger) (*App, error) {
+	a := &App{
+		logger: logger,
+	}
 
 	err := a.init()
 
@@ -43,18 +46,19 @@ func NewApp() (*App, error) {
 
 func (a *App) init() error {
 	a.initDatabase()
-	a.serviceProvider = newServiceProvider(a.db)
+	a.serviceProvider = newServiceProvider(a.db, a.logger)
 	return nil
 }
 
 func (a *App) initDatabase() {
-	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
+	dbPool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
+		slog.Error("Unable to connect to database: %v\n", err)
+		return
 	}
-	log.Println("Connected to database")
+	slog.Info("Connected to database")
 
-	a.db = dbpool
+	a.db = dbPool
 }
 
 func (a *App) RunHttpServer() {
@@ -76,5 +80,8 @@ func (a *App) RunHttpServer() {
 		port = "8080"
 	}
 
-	e.Logger.Fatal(e.Start(":" + port))
+	err := e.Start(":" + port)
+	if err != nil {
+		a.logger.Error("failed to start server: %v", err)
+	}
 }

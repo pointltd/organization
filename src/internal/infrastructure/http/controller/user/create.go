@@ -33,6 +33,7 @@ func (c *controller) CreateUser(ctx echo.Context) error {
 
 	user, err := c.createUserUseCase.Execute(dto)
 	if err != nil {
+		c.log.Error("Failed to create user: %v\n", err)
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 

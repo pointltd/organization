@@ -10,10 +10,14 @@ import (
 	userController "github.com/pointltd/organization/internal/infrastructure/http/controller/user"
 	"github.com/pointltd/organization/internal/usecase"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
+	"log/slog"
+	"os"
 )
 
 type serviceProvider struct {
 	db *pgxpool.Pool
+
+	log *slog.Logger
 
 	userMapper mapper.UserMapper
 
@@ -25,9 +29,10 @@ type serviceProvider struct {
 	controller controller.UserController
 }
 
-func newServiceProvider(db *pgxpool.Pool) *serviceProvider {
+func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
 	return &serviceProvider{
-		db: db,
+		db:  db,
+		log: logger,
 	}
 }
 
