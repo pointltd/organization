@@ -30,6 +30,7 @@ WORKDIR /app
 
 COPY --from=build /app/organization ./
 
+ARG DATABASE_URL=${DATABASE_URL}
 ENV DATABASE_URL=${DATABASE_URL}
 
 CMD [ "/app/organization" ]

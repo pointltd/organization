@@ -29,6 +29,8 @@ jobs:
           push: true
           tags: cr.yandex/crp4640u3tckkugq0upa/organization-app:${{ github.sha }}
           target: prod
+          env: |
+            DATABASE_URL=${DATABASE_URL}
 
   terraform:
     name: Deploy infrastructure
