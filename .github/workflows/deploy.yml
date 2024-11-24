@@ -9,6 +9,8 @@ jobs:
   docker:
     name: Prepare Docker image
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://${{ secrets.DB_USER_TEST }}:${{ secrets.DB_PASSWORD_TEST }}@${{ secrets.DB_HOST_TEST }}:5432/${{ secrets.DB_DATABASE_TEST }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,8 +29,6 @@ jobs:
           push: true
           tags: cr.yandex/crp4640u3tckkugq0upa/organization-app:${{ github.sha }}
           target: prod
-        env:
-          DATABASE_URL: postgresql://${{ secrets.DB_USER_TEST }}:${{ secrets.DB_PASSWORD_TEST }}@${{ secrets.DB_HOST_TEST }}:5432/${{ secrets.DB_DATABASE_TEST }}
 
   terraform:
     name: Deploy infrastructure
