@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/pointltd/organization/internal/data"
 	"net/http"
 )
 
@@ -21,5 +22,19 @@ func (c *controller) CreateUser(ctx echo.Context) error {
 	if err := ctx.Validate(request); err != nil {
 		return err
 	}
-	return ctx.JSON(http.StatusOK, "")
+
+	dto := data.CreateUserDTO{
+		FirstName:            request.FirstName,
+		LastName:             request.LastName,
+		Password:             request.Password,
+		PasswordConfirmation: request.PasswordConfirmation,
+		Email:                request.Email,
+	}
+
+	user, err := c.createUserUseCase.Execute(dto)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
+	}
+
+	return ctx.JSON(http.StatusOK, user)
 }

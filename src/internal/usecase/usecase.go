@@ -1,9 +1,12 @@
 package usecase
 
-import "github.com/pointltd/organization/internal/domain/entity"
+import (
+	"github.com/pointltd/organization/internal/data"
+	"github.com/pointltd/organization/internal/domain/entity"
+)
 
 type CreateUserUseCase interface {
-	Execute(userUUID string, info *entity.UserInfo) error
+	Execute(dto data.CreateUserDTO) (entity.User, error)
 }
 
 type ListUsersUseCase interface {

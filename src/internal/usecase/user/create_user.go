@@ -1,18 +1,17 @@
 package user
 
 import (
+	"fmt"
+	"github.com/google/uuid"
+	"github.com/pointltd/organization/internal/data"
 	"github.com/pointltd/organization/internal/domain/entity"
 	"github.com/pointltd/organization/internal/domain/repository"
 	def "github.com/pointltd/organization/internal/usecase"
+	"log"
+	"time"
 )
 
 var _ def.CreateUserUseCase = (*createUserUseCase)(nil)
-
-type CreateUserDto struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Email     string `json:"email"`
-}
 
 type createUserUseCase struct {
 	userRepository repository.UserRepository
@@ -24,11 +23,32 @@ func NewUseCase(userRepository repository.UserRepository) *createUserUseCase {
 	}
 }
 
-func (u createUserUseCase) Execute(userID string, info *entity.UserInfo) error {
-	user := entity.User{
-		ID:   userID,
-		Info: *info,
+func (u createUserUseCase) Execute(dto data.CreateUserDTO) (entity.User, error) {
+	id, err := uuid.NewV7()
+	if err != nil {
+		log.Fatal(fmt.Sprintf("error generating user UUID: %v\n", err))
 	}
 
-	return u.userRepository.Save(user)
+	info := entity.UserInfo{
+		FirstName: dto.FirstName,
+		LastName:  dto.LastName,
+	}
+
+	contacts := entity.ContactInfo{
+		Email: dto.Email,
+	}
+
+	timestamps := entity.Timestamp{
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	user := entity.User{
+		ID:        id.String(),
+		Info:      info,
+		Contacts:  contacts,
+		Timestamp: timestamps,
+	}
+
+	return user, nil
 }

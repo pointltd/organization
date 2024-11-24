@@ -8,13 +8,13 @@ import (
 var _ def.UserController = (*controller)(nil)
 
 type controller struct {
-	createUserCase   usecase.CreateUserUseCase
-	listUsersUseCase usecase.ListUsersUseCase
+	createUserUseCase usecase.CreateUserUseCase
+	listUsersUseCase  usecase.ListUsersUseCase
 }
 
 func NewController(createUserCase usecase.CreateUserUseCase, listUsersUseCase usecase.ListUsersUseCase) *controller {
 	return &controller{
-		createUserCase:   createUserCase,
-		listUsersUseCase: listUsersUseCase,
+		createUserUseCase: createUserCase,
+		listUsersUseCase:  listUsersUseCase,
 	}
 }
