@@ -50,7 +50,7 @@ func (r *repository) GetAll() ([]entity.User, error) {
 	return users, nil
 }
 
-func (r *repository) Save(user entity.User) error {
+func (r *repository) Save(user entity.User) (entity.User, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
 		log.Fatal(fmt.Sprintf("error generating user UUID: %v\n", err))
@@ -62,11 +62,18 @@ func (r *repository) Save(user entity.User) error {
 
 	args := r.userMapper.MapEntityToArg(user)
 
-	_, err = r.db.Query(context.Background(), query, args)
+	row, err := r.db.Query(context.Background(), query, args)
 
 	if err != nil {
-		return fmt.Errorf("unable to insert row: %w", err)
+		return user, err
 	}
 
-	return nil
+	userModel, err := pgx.CollectOneRow(row, pgx.RowToStructByName[model.User])
+	if err != nil {
+		return user, err
+	}
+
+	user = r.userMapper.MapModelToEntity(userModel)
+
+	return user, nil
 }

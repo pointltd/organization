@@ -51,7 +51,7 @@ func (u createUserUseCase) Execute(dto data.CreateUserDTO) (entity.User, error) 
 		Timestamp: timestamps,
 	}
 
-	err = u.userRepository.Save(user)
+	user, err = u.userRepository.Save(user)
 
 	return user, nil
 }
