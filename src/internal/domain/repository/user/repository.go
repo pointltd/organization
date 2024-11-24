@@ -32,8 +32,9 @@ func (r *repository) GetAll() ([]entity.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
-	var users []entity.User
+	var users = make([]entity.User, 0)
 
 	all, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.User])
 
@@ -70,6 +71,8 @@ func (r *repository) Save(user entity.User) (entity.User, error) {
 	if err != nil {
 		return user, err
 	}
+
+	defer row.Close()
 
 	userModel, err := pgx.CollectOneRow(row, pgx.RowToStructByName[model.User])
 	if err != nil {
