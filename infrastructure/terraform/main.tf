@@ -77,7 +77,7 @@ resource "yandex_serverless_container" "organization-app-container" {
   secrets {
     environment_variable = "DATABASE_URL"
     id                   = "e6q5ov5vhuern7sfjg1c"
-    key                  = "organization-database-url"
+    key                  = "abj89fpvmtrec3c38lfd"
     version_id           = "e6q93aplhpcmlou5fu8g"
   }
 
