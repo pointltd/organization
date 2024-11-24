@@ -11,7 +11,6 @@ import (
 	"github.com/pointltd/organization/internal/usecase"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 	"log/slog"
-	"os"
 )
 
 type serviceProvider struct {
