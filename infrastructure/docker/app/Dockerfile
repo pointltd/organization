@@ -23,10 +23,18 @@ RUN go install github.com/air-verse/air@latest
 
 ENTRYPOINT ["air", "-build.cmd", "go build -o ./bin/organization-app ./cmd/api", "-build.bin", "./bin/organization-app"]
 
-FROM scratch AS prod
+FROM golang:1.22 AS prod
 
 WORKDIR /app
 
-COPY --from=build /app/organization-app ./
+# Download Go modules
+COPY ./src ./
 
-CMD ["/app/organization-app"]
+RUN go mod tidy
+RUN go mod vendor
+
+# Build
+RUN CGO_ENABLED=0 GOOS=linux go build -o /organization ./cmd/api
+
+# Run
+CMD [ "/organization" ]
