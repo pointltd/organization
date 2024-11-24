@@ -62,9 +62,17 @@ func (r *repository) Save(user entity.User) error {
 
 	user.ID = id.String()
 
-	query := `INSERT INTO users (id, password, first_name, last_name, email) VALUES ($1, $2, $3, $4, $5)`
+	query := `INSERT INTO users (id, password, first_name, last_name, email) VALUES (@id, @password, @first_name, @last_name, @email) RETURNING *`
 
-	_, err = r.db.Exec(context.Background(), query, id, user.Password, user.Info.FirstName, user.Info.LastName, user.Contacts.Email)
+	args := pgx.NamedArgs{
+		"id":         id.String(),
+		"password":   user.Password,
+		"first_name": user.Info.FirstName,
+		"last_name":  user.Info.LastName,
+		"email":      user.Contacts.Email,
+	}
+
+	_, err = r.db.Query(context.Background(), query, args)
 
 	if err != nil {
 		return fmt.Errorf("unable to insert row: %w", err)
