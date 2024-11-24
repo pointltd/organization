@@ -12,6 +12,7 @@ type CreateUserRequest struct {
 	Password             string  `json:"password" validate:"required"`
 	PasswordConfirmation string  `json:"password_confirmation" validate:"required,eqcsfield=Password"`
 	Email                string  `json:"email" validate:"email"`
+	Phone                *string `json:"phone" validate:"omitempty,e164"`
 }
 
 func (c *controller) CreateUser(ctx echo.Context) error {
