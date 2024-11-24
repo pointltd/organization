@@ -53,7 +53,7 @@ resource "yandex_resourcemanager_folder_iam_member" "registry_pull_permission" {
 }
 
 variable "ORGANIZATION_IMAGE_TAG" {
-  default = "latest"
+  type      = string
 }
 
 resource "yandex_serverless_container" "organization-app-container" {
