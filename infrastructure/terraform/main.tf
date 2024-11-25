@@ -9,6 +9,7 @@ locals {
   container_name   = "organization-app"
   image_id         = "crppi5deo87qjhsgaf0c"
   registry_id      = "cr.yandex/crp4640u3tckkugq0upa"
+  db_url_secret_id = "e6qdce4u6atkl8njrrol"
 }
 
 terraform {
@@ -58,12 +59,6 @@ resource "yandex_resourcemanager_folder_iam_member" "lockbox_decrypt_permission"
   member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "lockbox_payload_viewer_permission" {
-  folder_id = local.target_folder_id
-  role      = "lockbox.payloadViewer"
-  member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
-}
-
 variable "ORGANIZATION_IMAGE_TAG" {
   type      = string
 }
@@ -76,7 +71,7 @@ resource "yandex_serverless_container" "organization-app-container" {
 
   secrets {
     environment_variable = "DATABASE_URL"
-    id                   = "e6qdce4u6atkl8njrrol"
+    id                   = local.db_url_secret_id
     key                  = "DATABASE_URL"
     version_id           = "e6qbk89fofussm10ksu5"
   }
