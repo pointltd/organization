@@ -53,10 +53,10 @@ resource "yandex_resourcemanager_folder_iam_member" "registry_pull_permission" {
   member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "lockbox_decrypt_permission" {
-  folder_id = local.target_folder_id
-  role      = "kms.keys.encrypterDecrypter"
-  member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
+resource "yandex_lockbox_secret_iam_binding" "lockbox_payload_viewer_permission" {
+    secret_id = local.db_url_secret_id
+    role      = "lockbox.payloadViewer"
+    members   = ["serviceAccount:${yandex_iam_service_account.organization-sa.id}"]
 }
 
 variable "ORGANIZATION_IMAGE_TAG" {
