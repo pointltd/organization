@@ -58,9 +58,9 @@ resource "yandex_resourcemanager_folder_iam_member" "lockbox_decrypt_permission"
   member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
-resource "yandex_resourcemanager_folder_iam_member" "lockbox_viewer_permission" {
+resource "yandex_resourcemanager_folder_iam_member" "lockbox_payload_viewer_permission" {
   folder_id = local.target_folder_id
-  role      = "lockbox.viewer"
+  role      = "lockbox.payloadViewer"
   member    = "serviceAccount:${yandex_iam_service_account.organization-sa.id}"
 }
 
