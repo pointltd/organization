@@ -80,7 +80,7 @@ func (a *App) RunHttpServer() {
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(jwtCustomClaims)
 		},
-		SigningKey: []byte("secret"),
+		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
 
 	var jwtMiddleware = echojwt.WithConfig(config)
