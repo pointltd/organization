@@ -7,3 +7,7 @@ type UserController interface {
 	GetUser(ctx echo.Context) error
 	CreateUser(ctx echo.Context) error
 }
+
+type AuthController interface {
+	Login(ctx echo.Context) error
+}

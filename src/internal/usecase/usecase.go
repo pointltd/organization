@@ -12,3 +12,7 @@ type CreateUserUseCase interface {
 type ListUsersUseCase interface {
 	Execute() ([]entity.User, error)
 }
+
+type AuthenticateUserUseCase interface {
+	Execute(email string, password string) (*entity.User, error)
+}

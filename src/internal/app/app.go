@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"github.com/go-playground/validator"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pointltd/organization/internal/infrastructure/http/route"
@@ -21,6 +23,12 @@ type App struct {
 
 type Validator struct {
 	validator *validator.Validate
+}
+
+type jwtCustomClaims struct {
+	Name  string `json:"name"`
+	Admin bool   `json:"admin"`
+	jwt.RegisteredClaims
 }
 
 func (cv *Validator) Validate(i interface{}) error {
@@ -67,13 +75,24 @@ func (a *App) RunHttpServer() {
 
 	// Validator
 	e.Validator = &Validator{validator: validator.New()}
+
+	config := echojwt.Config{
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(jwtCustomClaims)
+		},
+		SigningKey: []byte("secret"),
+	}
+
+	var jwtMiddleware = echojwt.WithConfig(config)
+
 	// Middlewares
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	// Routes
 	api := e.Group("/v1")
-	route.RegisterUserRoutes(api, a.serviceProvider.UserController())
+	route.RegisterAuthRoutes(api, a.serviceProvider.AuthController())
+	route.RegisterUserRoutes(api, a.serviceProvider.UserController(), jwtMiddleware)
 
 	// Port configuration
 	port := os.Getenv("PORT")

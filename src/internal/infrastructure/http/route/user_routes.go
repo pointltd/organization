@@ -5,11 +5,10 @@ import (
 	"github.com/pointltd/organization/internal/infrastructure/http/controller"
 )
 
-func RegisterUserRoutes(group *echo.Group, controller controller.UserController) {
+func RegisterUserRoutes(group *echo.Group, controller controller.UserController, jwtMiddleware echo.MiddlewareFunc) {
 	userGroup := group.Group("/users")
+	userGroup.Use(jwtMiddleware)
 	userGroup.GET("", controller.ListUsers)
 	userGroup.GET("/:id", controller.GetUser)
 	userGroup.POST("", controller.CreateUser)
-	//artistsGroup.PUT("/:id", controllers.UpdateArtist)
-	//artistsGroup.DELETE("/:id", controllers.DeleteArtist)
 }

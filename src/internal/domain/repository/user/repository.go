@@ -20,11 +20,29 @@ type repository struct {
 	userMapper mapper.UserMapper
 }
 
-func NewRepository(db *pgxpool.Pool, userMapper mapper.UserMapper) *repository {
+func NewUserRepository(db *pgxpool.Pool, userMapper mapper.UserMapper) *repository {
 	return &repository{
 		db:         db,
 		userMapper: userMapper,
 	}
+}
+
+func (r *repository) FindByEmail(email string) (*entity.User, error) {
+	row, err := r.db.Query(context.Background(), "SELECT * FROM users WHERE email = $1 LIMIT 1", email)
+	if err != nil {
+		return nil, err
+	}
+
+	defer row.Close()
+
+	userModel, err := pgx.CollectOneRow(row, pgx.RowToStructByName[model.User])
+	if err != nil {
+		return nil, err
+	}
+
+	user := r.userMapper.MapModelToEntity(userModel)
+
+	return &user, nil
 }
 
 func (r *repository) GetAll() ([]entity.User, error) {

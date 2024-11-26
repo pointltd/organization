@@ -7,8 +7,10 @@ import (
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
 	"github.com/pointltd/organization/internal/infrastructure/http/controller"
+	authController "github.com/pointltd/organization/internal/infrastructure/http/controller/auth"
 	userController "github.com/pointltd/organization/internal/infrastructure/http/controller/user"
 	"github.com/pointltd/organization/internal/usecase"
+	authenticateUserUseCase "github.com/pointltd/organization/internal/usecase/auth"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 	"log/slog"
 )
@@ -22,10 +24,12 @@ type serviceProvider struct {
 
 	userRepository repository.UserRepository
 
-	createUserUseCase usecase.CreateUserUseCase
-	listUsersUseCase  usecase.ListUsersUseCase
+	authenticateUserUseCase usecase.AuthenticateUserUseCase
+	createUserUseCase       usecase.CreateUserUseCase
+	listUsersUseCase        usecase.ListUsersUseCase
 
-	controller controller.UserController
+	authController controller.AuthController
+	userController controller.UserController
 }
 
 func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
@@ -45,10 +49,18 @@ func (s *serviceProvider) UserMapper() mapper.UserMapper {
 
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
-		s.userRepository = userRepository.NewRepository(s.db, s.UserMapper())
+		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper())
 	}
 
 	return s.userRepository
+}
+
+func (s *serviceProvider) AuthenticateUserUseCase() usecase.AuthenticateUserUseCase {
+	if s.authenticateUserUseCase == nil {
+		s.authenticateUserUseCase = authenticateUserUseCase.NewAuthenticateUserUseCase(s.UserRepository())
+	}
+
+	return s.authenticateUserUseCase
 }
 
 func (s *serviceProvider) CreateUserUseCase() usecase.CreateUserUseCase {
@@ -67,10 +79,18 @@ func (s *serviceProvider) ListUsersUseCase() usecase.ListUsersUseCase {
 	return s.listUsersUseCase
 }
 
-func (s *serviceProvider) UserController() controller.UserController {
-	if s.controller == nil {
-		s.controller = userController.NewController(s.CreateUserUseCase(), s.ListUsersUseCase())
+func (s *serviceProvider) AuthController() controller.AuthController {
+	if s.authController == nil {
+		s.authController = authController.NewAuthController(s.AuthenticateUserUseCase())
 	}
 
-	return s.controller
+	return s.authController
+}
+
+func (s *serviceProvider) UserController() controller.UserController {
+	if s.userController == nil {
+		s.userController = userController.NewController(s.CreateUserUseCase(), s.ListUsersUseCase())
+	}
+
+	return s.userController
 }
