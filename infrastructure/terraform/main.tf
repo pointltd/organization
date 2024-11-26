@@ -10,6 +10,7 @@ locals {
   image_id         = "crppi5deo87qjhsgaf0c"
   registry_id      = "cr.yandex/crp4640u3tckkugq0upa"
   db_url_secret_id = "e6qdce4u6atkl8njrrol"
+  jwt_secret_id    = "e6q0tnu3qnmhr4imib32"
 }
 
 terraform {
@@ -59,6 +60,12 @@ resource "yandex_lockbox_secret_iam_binding" "lockbox_payload_viewer_permission"
     members   = ["serviceAccount:${yandex_iam_service_account.organization-sa.id}"]
 }
 
+resource "yandex_lockbox_secret_iam_binding" "lockbox_payload_viewer_permission" {
+  secret_id = local.jwt_secret_id
+  role      = "lockbox.payloadViewer"
+  members   = ["serviceAccount:${yandex_iam_service_account.organization-sa.id}"]
+}
+
 variable "ORGANIZATION_IMAGE_TAG" {
   type      = string
 }
@@ -74,6 +81,13 @@ resource "yandex_serverless_container" "organization-app-container" {
     id                   = local.db_url_secret_id
     key                  = "DATABASE_URL"
     version_id           = "e6qbk89fofussm10ksu5"
+  }
+
+  secrets {
+    environment_variable = "JWT_SECRET"
+    id                   = local.jwt_secret_id
+    key                  = "JWT_SECRET"
+    version_id           = "e6qqunh4ra3ee11b24a8"
   }
 
   image {
