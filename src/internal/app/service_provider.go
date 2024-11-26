@@ -81,7 +81,7 @@ func (s *serviceProvider) ListUsersUseCase() usecase.ListUsersUseCase {
 
 func (s *serviceProvider) AuthController() controller.AuthController {
 	if s.authController == nil {
-		s.authController = authController.NewAuthController(s.AuthenticateUserUseCase())
+		s.authController = authController.NewAuthController(s.AuthenticateUserUseCase(), s.CreateUserUseCase())
 	}
 
 	return s.authController

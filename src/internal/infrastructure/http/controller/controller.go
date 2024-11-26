@@ -10,4 +10,5 @@ type UserController interface {
 
 type AuthController interface {
 	Login(ctx echo.Context) error
+	Register(ctx echo.Context) error
 }

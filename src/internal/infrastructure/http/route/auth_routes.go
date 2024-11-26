@@ -8,4 +8,5 @@ import (
 func RegisterAuthRoutes(group *echo.Group, controller controller.AuthController) {
 	authGroup := group.Group("")
 	authGroup.POST("/login", controller.Login)
+	authGroup.POST("/register", controller.Register)
 }
