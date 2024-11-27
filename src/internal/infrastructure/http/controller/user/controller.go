@@ -14,7 +14,7 @@ type controller struct {
 	listUsersUseCase  usecase.ListUsersUseCase
 }
 
-func NewController(createUserCase usecase.CreateUserUseCase, listUsersUseCase usecase.ListUsersUseCase) *controller {
+func NewUserController(createUserCase usecase.CreateUserUseCase, listUsersUseCase usecase.ListUsersUseCase) *controller {
 	return &controller{
 		createUserUseCase: createUserCase,
 		listUsersUseCase:  listUsersUseCase,

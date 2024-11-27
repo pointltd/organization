@@ -16,9 +16,10 @@ import (
 )
 
 type App struct {
-	serviceProvider *serviceProvider
-	db              *pgxpool.Pool
-	logger          *slog.Logger
+	controllerProvider *controllerProvider
+	serviceProvider    *serviceProvider
+	db                 *pgxpool.Pool
+	logger             *slog.Logger
 }
 
 type Validator struct {
@@ -55,6 +56,7 @@ func NewApp(logger *slog.Logger) (*App, error) {
 func (a *App) init() error {
 	a.initDatabase()
 	a.serviceProvider = newServiceProvider(a.db, a.logger)
+	a.controllerProvider = newControllerProvider(a.serviceProvider)
 	return nil
 }
 
@@ -91,8 +93,8 @@ func (a *App) RunHttpServer() {
 
 	// Routes
 	api := e.Group("/v1")
-	route.RegisterAuthRoutes(api, a.serviceProvider.AuthController())
-	route.RegisterUserRoutes(api, a.serviceProvider.UserController(), jwtMiddleware)
+	route.RegisterAuthRoutes(api, a.controllerProvider.AuthController())
+	route.RegisterUserRoutes(api, a.controllerProvider.UserController(), jwtMiddleware)
 
 	// Port configuration
 	port := os.Getenv("PORT")
