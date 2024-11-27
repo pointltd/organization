@@ -43,7 +43,6 @@ func (a *App) init() error {
 }
 
 func (a *App) initDatabase() {
-	slog.Info("Connecting to database", "url", os.Getenv("DATABASE_URL"))
 	dbPool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		slog.Error("Unable to connect to database: %v\n", err)
