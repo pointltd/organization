@@ -3,13 +3,12 @@ package app
 import (
 	"context"
 	"github.com/go-playground/validator"
-	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/pointltd/organization/internal/infrastructure/http"
 	"github.com/pointltd/organization/internal/infrastructure/http/route"
 	"log/slog"
-	"net/http"
 	"os"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -20,23 +19,6 @@ type App struct {
 	serviceProvider    *serviceProvider
 	db                 *pgxpool.Pool
 	logger             *slog.Logger
-}
-
-type Validator struct {
-	validator *validator.Validate
-}
-
-type jwtCustomClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
-	jwt.RegisteredClaims
-}
-
-func (cv *Validator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return nil
 }
 
 func NewApp(logger *slog.Logger) (*App, error) {
@@ -75,17 +57,9 @@ func (a *App) initDatabase() {
 func (a *App) RunHttpServer() {
 	e := echo.New()
 
-	// Validator
-	e.Validator = &Validator{validator: validator.New()}
+	e.Validator = &http.Validator{Validator: validator.New()}
 
-	config := echojwt.Config{
-		NewClaimsFunc: func(c echo.Context) jwt.Claims {
-			return new(jwtCustomClaims)
-		},
-		SigningKey: []byte(os.Getenv("JWT_SECRET")),
-	}
-
-	var jwtMiddleware = echojwt.WithConfig(config)
+	var jwtMiddleware = echojwt.WithConfig(http.GetJwtConfig())
 
 	// Middlewares
 	e.Use(middleware.Logger())
