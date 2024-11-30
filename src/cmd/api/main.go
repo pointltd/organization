@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/pointltd/organization/internal/app"
+	"github.com/pointltd/organization/internal/infrastructure/http"
 	"os"
 
 	"log/slog"
@@ -11,13 +12,18 @@ func main() {
 	logger := initLogger()
 
 	a, err := app.NewApp(logger)
-
 	if err != nil {
 		logger.Error("failed to init app: %s", err.Error())
 		return
 	}
 
-	a.RunHttpServer()
+	s := http.NewServer(logger, a)
+
+	err = s.RunHttpServer()
+	if err != nil {
+		logger.Error("failed to run server: %s", err.Error())
+		return
+	}
 }
 
 func initLogger() *slog.Logger {
