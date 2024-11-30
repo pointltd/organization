@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"github.com/jackc/pgx/v5"
 	"github.com/pointltd/organization/internal/domain/entity"
 	"github.com/pointltd/organization/internal/infrastructure/database/model"
@@ -19,7 +20,7 @@ func (r *repository) GetAll() ([]entity.User, error) {
 	all, err := pgx.CollectRows(rows, pgx.RowToStructByName[model.User])
 
 	if err != nil {
-		r.log.Error(err.Error())
+		r.log.Error(fmt.Sprintf("failed to map row: %s", err.Error()))
 		return nil, err
 	}
 

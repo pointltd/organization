@@ -7,3 +7,7 @@ type UserRepository interface {
 	GetAll() ([]entity.User, error)
 	Save(user entity.User) (entity.User, error)
 }
+
+type OrganizationRepository interface {
+	Save(organization entity.Organization) (entity.Organization, error)
+}

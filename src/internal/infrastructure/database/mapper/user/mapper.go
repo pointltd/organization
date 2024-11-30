@@ -38,18 +38,6 @@ func (m *userMapper) MapModelToEntity(model model.User) entity.User {
 		contactInfo.Phone = &model.Phone.String
 	}
 
-	var userStamp = entity.UserStamp{}
-
-	if model.CreatedById.Valid {
-		userStamp.CreatedById = &model.CreatedById.String
-	}
-	if model.UpdatedById.Valid {
-		userStamp.UpdatedById = &model.UpdatedById.String
-	}
-	if model.DeletedById.Valid {
-		userStamp.DeletedById = &model.DeletedById.String
-	}
-
 	var user = entity.User{
 		ID:       model.ID,
 		Password: model.Password,
@@ -58,7 +46,6 @@ func (m *userMapper) MapModelToEntity(model model.User) entity.User {
 		},
 		Contacts:  contactInfo,
 		Timestamp: timestamp,
-		UserStamp: userStamp,
 	}
 
 	if model.LastName.Valid {
@@ -94,18 +81,6 @@ func (m *userMapper) MapEntityToArg(user entity.User) pgx.NamedArgs {
 
 	if user.Timestamp.DeletedAt != nil {
 		args["deleted_at"] = *user.Timestamp.DeletedAt
-	}
-
-	if user.UserStamp.CreatedById != nil {
-		args["created_by_id"] = *user.UserStamp.CreatedById
-	}
-
-	if user.UserStamp.UpdatedById != nil {
-		args["updated_by_id"] = *user.UserStamp.UpdatedById
-	}
-
-	if user.UserStamp.DeletedById != nil {
-		args["deleted_by_id"] = *user.UserStamp.DeletedById
 	}
 
 	return args

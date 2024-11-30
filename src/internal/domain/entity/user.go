@@ -5,7 +5,6 @@ type User struct {
 	Password  string      `json:"password"`
 	Contacts  ContactInfo `json:"contacts"`
 	Info      UserInfo    `json:"info"`
-	UserStamp UserStamp   `json:"user_stamp"`
 	Timestamp Timestamp   `json:"timestamp"`
 }
 

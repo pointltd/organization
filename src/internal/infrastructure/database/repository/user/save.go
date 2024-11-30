@@ -19,8 +19,8 @@ func (r *repository) Save(user entity.User) (entity.User, error) {
 	user.ID = id.String()
 
 	query :=
-		`INSERT INTO users (id, password, first_name, last_name, email, phone, created_at, updated_at, deleted_at, created_by_id, updated_by_id, deleted_by_id) 
-		VALUES (@id, @password, @first_name, @last_name, @email, @phone, @created_at, @updated_at, @deleted_at, @created_by_id, @updated_by_id, @deleted_by_id) 
+		`INSERT INTO users (id, password, first_name, last_name, email, phone, created_at, updated_at, deleted_at) 
+		VALUES (@id, @password, @first_name, @last_name, @email, @phone, @created_at, @updated_at, @deleted_at) 
 		RETURNING *`
 
 	args := r.userMapper.MapEntityToArg(user)

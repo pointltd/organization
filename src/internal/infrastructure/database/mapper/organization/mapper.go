@@ -30,24 +30,11 @@ func (m *organizationMapper) MapModelToEntity(model model.Organization) entity.O
 		timestamp.DeletedAt = &model.DeletedAt.Time
 	}
 
-	var userStamp = entity.UserStamp{}
-
-	if model.CreatedById.Valid {
-		userStamp.CreatedById = &model.CreatedById.String
-	}
-	if model.UpdatedById.Valid {
-		userStamp.UpdatedById = &model.UpdatedById.String
-	}
-	if model.DeletedById.Valid {
-		userStamp.DeletedById = &model.DeletedById.String
-	}
-
 	var organization = entity.Organization{
 		ID:        model.ID,
 		Name:      model.Name,
 		OwnerID:   model.OwnerID,
 		Timestamp: timestamp,
-		UserStamp: userStamp,
 	}
 
 	return organization
@@ -70,18 +57,6 @@ func (m *organizationMapper) MapEntityToArg(organization entity.Organization) pg
 
 	if organization.Timestamp.DeletedAt != nil {
 		args["deleted_at"] = organization.Timestamp.DeletedAt
-	}
-
-	if organization.UserStamp.CreatedById != nil {
-		args["created_by_id"] = organization.UserStamp.CreatedById
-	}
-
-	if organization.UserStamp.UpdatedById != nil {
-		args["updated_by_id"] = organization.UserStamp.UpdatedById
-	}
-
-	if organization.UserStamp.DeletedById != nil {
-		args["deleted_by_id"] = organization.UserStamp.DeletedById
 	}
 
 	return args

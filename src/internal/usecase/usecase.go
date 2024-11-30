@@ -16,3 +16,7 @@ type ListUsersUseCase interface {
 type AuthenticateUserUseCase interface {
 	Execute(email string, password string) (*entity.User, error)
 }
+
+type CreateOrganizationUseCase interface {
+	Execute() (entity.Organization, error)
+}
