@@ -26,7 +26,7 @@ func (c *controller) CreateOrganization(ctx echo.Context) error {
 
 	organization, err := c.createOrganizationUseCase.Execute(request.Name, ownerID)
 	if err != nil {
-		c.log.Error("Failed to create organization: %v", err)
+		c.log.Error("Failed to create organization for user %s: %v", ownerID, err)
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
