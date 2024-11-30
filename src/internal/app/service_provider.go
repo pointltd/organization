@@ -3,9 +3,9 @@ package app
 import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pointltd/organization/internal/domain/repository"
-	userRepository "github.com/pointltd/organization/internal/domain/repository/user"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
+	userRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/user"
 	"github.com/pointltd/organization/internal/usecase"
 	authenticateUserUseCase "github.com/pointltd/organization/internal/usecase/auth"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
@@ -43,7 +43,7 @@ func (s *serviceProvider) UserMapper() mapper.UserMapper {
 
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
-		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper())
+		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper(), s.log)
 	}
 
 	return s.userRepository
