@@ -18,5 +18,5 @@ type AuthenticateUserUseCase interface {
 }
 
 type CreateOrganizationUseCase interface {
-	Execute() (entity.Organization, error)
+	Execute(name string, ownerId string) (entity.Organization, error)
 }

@@ -12,7 +12,7 @@ import (
 func (r *repository) Save(user entity.User) (entity.User, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
-		r.log.Error(fmt.Sprintf("error generating user UUID: %v\n", err))
+		r.log.Error(fmt.Sprintf("error generating user UUID: %v", err))
 		return user, err
 	}
 

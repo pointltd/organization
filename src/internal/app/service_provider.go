@@ -4,10 +4,13 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/pointltd/organization/internal/domain/repository"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
+	organizationMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/organization"
 	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
+	organizationRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/organization"
 	userRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/user"
 	"github.com/pointltd/organization/internal/usecase"
 	authenticateUserUseCase "github.com/pointltd/organization/internal/usecase/auth"
+	createOrganizationUseCase "github.com/pointltd/organization/internal/usecase/organization"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 	"log/slog"
 )
@@ -17,13 +20,16 @@ type serviceProvider struct {
 
 	log *slog.Logger
 
-	userMapper mapper.UserMapper
+	userMapper         mapper.UserMapper
+	organizationMapper mapper.OrganizationMapper
 
-	userRepository repository.UserRepository
+	userRepository         repository.UserRepository
+	organizationRepository repository.OrganizationRepository
 
-	authenticateUserUseCase usecase.AuthenticateUserUseCase
-	createUserUseCase       usecase.CreateUserUseCase
-	listUsersUseCase        usecase.ListUsersUseCase
+	authenticateUserUseCase   usecase.AuthenticateUserUseCase
+	createUserUseCase         usecase.CreateUserUseCase
+	listUsersUseCase          usecase.ListUsersUseCase
+	createOrganizationUseCase usecase.CreateOrganizationUseCase
 }
 
 func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
@@ -41,12 +47,29 @@ func (s *serviceProvider) UserMapper() mapper.UserMapper {
 	return s.userMapper
 }
 
+func (s *serviceProvider) OrganizationMapper() mapper.OrganizationMapper {
+	if s.organizationMapper == nil {
+		s.organizationMapper = organizationMapper.NewOrganizationMapper()
+	}
+
+	return s.organizationMapper
+}
+
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
 		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper(), s.log)
 	}
 
 	return s.userRepository
+}
+
+func (s *serviceProvider) OrganizationRepository() repository.OrganizationRepository {
+	if s.organizationRepository == nil {
+		s.organizationRepository = organizationRepository.NewOrganizationRepository(s.db, s.OrganizationMapper(), s.log)
+	}
+
+	return s.organizationRepository
+
 }
 
 func (s *serviceProvider) AuthenticateUserUseCase() usecase.AuthenticateUserUseCase {
@@ -71,4 +94,15 @@ func (s *serviceProvider) ListUsersUseCase() usecase.ListUsersUseCase {
 	}
 
 	return s.listUsersUseCase
+}
+
+func (s *serviceProvider) CreateOrganizationUseCase() usecase.CreateOrganizationUseCase {
+	if s.createOrganizationUseCase == nil {
+		s.createOrganizationUseCase = createOrganizationUseCase.NewCreateOrganizationUseCase(
+			s.log,
+			s.OrganizationRepository(),
+		)
+	}
+
+	return s.createOrganizationUseCase
 }

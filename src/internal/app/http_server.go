@@ -38,6 +38,7 @@ func (s *httpServer) Start() error {
 	api := e.Group("/v1")
 	route.RegisterAuthRoutes(api, s.app.controllerProvider.AuthController())
 	route.RegisterUserRoutes(api, s.app.controllerProvider.UserController(), jwtMiddleware)
+	route.RegisterOrganizationRoutes(api, s.app.controllerProvider.OrganizationController(), jwtMiddleware)
 
 	// Port configuration
 	port := os.Getenv("PORT")

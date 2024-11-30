@@ -3,13 +3,15 @@ package app
 import (
 	"github.com/pointltd/organization/internal/infrastructure/http/controller"
 	authController "github.com/pointltd/organization/internal/infrastructure/http/controller/auth"
+	organizationController "github.com/pointltd/organization/internal/infrastructure/http/controller/organization"
 	userController "github.com/pointltd/organization/internal/infrastructure/http/controller/user"
 )
 
 type controllerProvider struct {
-	serviceProvider *serviceProvider
-	authController  controller.AuthController
-	userController  controller.UserController
+	serviceProvider        *serviceProvider
+	authController         controller.AuthController
+	userController         controller.UserController
+	organizationController controller.OrganizationController
 }
 
 func newControllerProvider(serviceProvider *serviceProvider) *controllerProvider {
@@ -38,4 +40,16 @@ func (c *controllerProvider) UserController() controller.UserController {
 	}
 
 	return c.userController
+}
+
+func (c *controllerProvider) OrganizationController() controller.OrganizationController {
+	if c.organizationController == nil {
+		c.organizationController = organizationController.NewOrganizationController(
+			c.serviceProvider.CreateOrganizationUseCase(),
+			c.serviceProvider.log,
+		)
+	}
+
+	return c.organizationController
+
 }
