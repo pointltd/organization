@@ -11,4 +11,5 @@ func RegisterUserRoutes(group *echo.Group, controller controller.UserController,
 	userGroup.GET("", controller.ListUsers)
 	userGroup.GET("/:id", controller.GetUser)
 	userGroup.POST("", controller.CreateUser)
+	userGroup.GET("/:id/organizations", controller.ListUserOrganizations)
 }

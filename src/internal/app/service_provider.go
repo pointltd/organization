@@ -26,10 +26,11 @@ type serviceProvider struct {
 	userRepository         repository.UserRepository
 	organizationRepository repository.OrganizationRepository
 
-	authenticateUserUseCase   usecase.AuthenticateUserUseCase
-	createUserUseCase         usecase.CreateUserUseCase
-	listUsersUseCase          usecase.ListUsersUseCase
-	createOrganizationUseCase usecase.CreateOrganizationUseCase
+	authenticateUserUseCase      usecase.AuthenticateUserUseCase
+	createUserUseCase            usecase.CreateUserUseCase
+	listUsersUseCase             usecase.ListUsersUseCase
+	createOrganizationUseCase    usecase.CreateOrganizationUseCase
+	listUserOrganizationsUseCase usecase.ListUserOrganizationsUseCase
 }
 
 func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
@@ -57,7 +58,7 @@ func (s *serviceProvider) OrganizationMapper() mapper.OrganizationMapper {
 
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
-		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper(), s.log)
+		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper(), s.OrganizationMapper(), s.log)
 	}
 
 	return s.userRepository
@@ -105,4 +106,15 @@ func (s *serviceProvider) CreateOrganizationUseCase() usecase.CreateOrganization
 	}
 
 	return s.createOrganizationUseCase
+}
+
+func (s *serviceProvider) ListUserOrganizationsUseCase() usecase.ListUserOrganizationsUseCase {
+	if s.listUserOrganizationsUseCase == nil {
+		s.listUserOrganizationsUseCase = createUserUseCase.NewListUserOrganizationsUseCase(
+			s.UserRepository(),
+			s.log,
+		)
+	}
+
+	return s.listUserOrganizationsUseCase
 }

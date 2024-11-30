@@ -10,15 +10,22 @@ import (
 var _ def.UserRepository = (*repository)(nil)
 
 type repository struct {
-	db         *pgxpool.Pool
-	userMapper mapper.UserMapper
-	log        *slog.Logger
+	db                 *pgxpool.Pool
+	userMapper         mapper.UserMapper
+	organizationMapper mapper.OrganizationMapper
+	log                *slog.Logger
 }
 
-func NewUserRepository(db *pgxpool.Pool, userMapper mapper.UserMapper, log *slog.Logger) *repository {
+func NewUserRepository(
+	db *pgxpool.Pool,
+	userMapper mapper.UserMapper,
+	organizationMapper mapper.OrganizationMapper,
+	log *slog.Logger,
+) *repository {
 	return &repository{
-		db:         db,
-		userMapper: userMapper,
-		log:        log,
+		db:                 db,
+		userMapper:         userMapper,
+		organizationMapper: organizationMapper,
+		log:                log,
 	}
 }

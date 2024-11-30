@@ -34,8 +34,10 @@ func (c *controllerProvider) AuthController() controller.AuthController {
 func (c *controllerProvider) UserController() controller.UserController {
 	if c.userController == nil {
 		c.userController = userController.NewUserController(
+			c.serviceProvider.log,
 			c.serviceProvider.CreateUserUseCase(),
 			c.serviceProvider.ListUsersUseCase(),
+			c.serviceProvider.ListUserOrganizationsUseCase(),
 		)
 	}
 

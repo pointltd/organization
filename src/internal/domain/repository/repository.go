@@ -6,6 +6,7 @@ type UserRepository interface {
 	FindByEmail(email string) (*entity.User, error)
 	GetAll() ([]entity.User, error)
 	Save(user entity.User) (entity.User, error)
+	GetOrganizations(userId string) ([]entity.Organization, error)
 }
 
 type OrganizationRepository interface {
