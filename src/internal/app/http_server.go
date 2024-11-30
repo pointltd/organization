@@ -1,34 +1,34 @@
-package http
+package app
 
 import (
 	"github.com/go-playground/validator"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/pointltd/organization/internal/app"
+	"github.com/pointltd/organization/internal/infrastructure/http"
 	"github.com/pointltd/organization/internal/infrastructure/http/route"
 	"log/slog"
 	"os"
 )
 
-type Server struct {
+type httpServer struct {
 	log *slog.Logger
-	app *app.App
+	app *App
 }
 
-func NewServer(log *slog.Logger, app *app.App) *Server {
-	return &Server{
+func NewHttpServer(log *slog.Logger, app *App) *httpServer {
+	return &httpServer{
 		log: log,
 		app: app,
 	}
 }
 
-func (s *Server) RunHttpServer() error {
+func (s *httpServer) Start() error {
 	e := echo.New()
 
-	e.Validator = &Validator{Validator: validator.New()}
+	e.Validator = &http.Validator{Validator: validator.New()}
 
-	var jwtMiddleware = echojwt.WithConfig(GetJwtConfig())
+	var jwtMiddleware = echojwt.WithConfig(http.GetJwtConfig())
 
 	// Middlewares
 	e.Use(middleware.Logger())
@@ -36,8 +36,8 @@ func (s *Server) RunHttpServer() error {
 
 	// Routes
 	api := e.Group("/v1")
-	route.RegisterAuthRoutes(api, s.app.ControllerProvider.AuthController())
-	route.RegisterUserRoutes(api, s.app.ControllerProvider.UserController(), jwtMiddleware)
+	route.RegisterAuthRoutes(api, s.app.controllerProvider.AuthController())
+	route.RegisterUserRoutes(api, s.app.controllerProvider.UserController(), jwtMiddleware)
 
 	// Port configuration
 	port := os.Getenv("PORT")

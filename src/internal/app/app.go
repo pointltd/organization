@@ -9,10 +9,11 @@ import (
 )
 
 type App struct {
-	ControllerProvider *controllerProvider
+	controllerProvider *controllerProvider
 	serviceProvider    *serviceProvider
 	db                 *pgxpool.Pool
 	logger             *slog.Logger
+	httpServer         *httpServer
 }
 
 func NewApp(logger *slog.Logger) (*App, error) {
@@ -32,7 +33,7 @@ func NewApp(logger *slog.Logger) (*App, error) {
 func (a *App) init() error {
 	a.initDatabase()
 	a.serviceProvider = newServiceProvider(a.db, a.logger)
-	a.ControllerProvider = newControllerProvider(a.serviceProvider)
+	a.controllerProvider = newControllerProvider(a.serviceProvider)
 	return nil
 }
 
@@ -45,4 +46,9 @@ func (a *App) initDatabase() {
 	slog.Info("Connected to database")
 
 	a.db = dbPool
+}
+
+func (a *App) RunHttpServer() error {
+	a.httpServer = NewHttpServer(a.logger, a)
+	return a.httpServer.Start()
 }
