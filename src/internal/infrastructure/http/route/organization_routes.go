@@ -13,4 +13,5 @@ func RegisterOrganizationRoutes(
 	organizationGroup := group.Group("/organizations")
 	organizationGroup.Use(jwtMiddleware)
 	organizationGroup.POST("", controller.CreateOrganization)
+	organizationGroup.GET("/:id/points", controller.ListOrganizationPoints)
 }

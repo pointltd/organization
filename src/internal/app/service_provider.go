@@ -14,6 +14,7 @@ import (
 	authenticateUserUseCase "github.com/pointltd/organization/internal/usecase/auth"
 	createOrganizationUseCase "github.com/pointltd/organization/internal/usecase/organization"
 	createPointUseCase "github.com/pointltd/organization/internal/usecase/point"
+	listOrganizationPointsUseCase "github.com/pointltd/organization/internal/usecase/point"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 	"log/slog"
 )
@@ -31,12 +32,13 @@ type serviceProvider struct {
 	organizationRepository repository.OrganizationRepository
 	pointRepository        repository.PointRepository
 
-	authenticateUserUseCase      usecase.AuthenticateUserUseCase
-	createUserUseCase            usecase.CreateUserUseCase
-	listUsersUseCase             usecase.ListUsersUseCase
-	createOrganizationUseCase    usecase.CreateOrganizationUseCase
-	listUserOrganizationsUseCase usecase.ListUserOrganizationsUseCase
-	createPointUseCase           usecase.CreatePointUseCase
+	authenticateUserUseCase       usecase.AuthenticateUserUseCase
+	createUserUseCase             usecase.CreateUserUseCase
+	listUsersUseCase              usecase.ListUsersUseCase
+	createOrganizationUseCase     usecase.CreateOrganizationUseCase
+	listUserOrganizationsUseCase  usecase.ListUserOrganizationsUseCase
+	createPointUseCase            usecase.CreatePointUseCase
+	listOrganizationPointsUseCase usecase.ListOrganizationPointsUseCase
 }
 
 func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
@@ -80,7 +82,12 @@ func (s *serviceProvider) UserRepository() repository.UserRepository {
 
 func (s *serviceProvider) OrganizationRepository() repository.OrganizationRepository {
 	if s.organizationRepository == nil {
-		s.organizationRepository = organizationRepository.NewOrganizationRepository(s.db, s.OrganizationMapper(), s.log)
+		s.organizationRepository = organizationRepository.NewOrganizationRepository(
+			s.db,
+			s.OrganizationMapper(),
+			s.PointMapper(),
+			s.log,
+		)
 	}
 
 	return s.organizationRepository
@@ -139,6 +146,16 @@ func (s *serviceProvider) ListUserOrganizationsUseCase() usecase.ListUserOrganiz
 	}
 
 	return s.listUserOrganizationsUseCase
+}
+
+func (s *serviceProvider) ListOrganizationPointsUseCase() usecase.ListOrganizationPointsUseCase {
+	if s.listOrganizationPointsUseCase == nil {
+		s.listOrganizationPointsUseCase = listOrganizationPointsUseCase.NewListOrganizationPointsUseCase(
+			s.OrganizationRepository(),
+		)
+	}
+
+	return s.listOrganizationPointsUseCase
 }
 
 func (s *serviceProvider) CreatePointUseCase() usecase.CreatePointUseCase {

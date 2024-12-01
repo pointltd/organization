@@ -9,16 +9,19 @@ import (
 var _ _def.OrganizationController = (*controller)(nil)
 
 type controller struct {
-	createOrganizationUseCase usecase.CreateOrganizationUseCase
-	log                       *slog.Logger
+	createOrganizationUseCase     usecase.CreateOrganizationUseCase
+	listOrganizationPointsUseCase usecase.ListOrganizationPointsUseCase
+	log                           *slog.Logger
 }
 
 func NewOrganizationController(
 	createOrganizationUseCase usecase.CreateOrganizationUseCase,
+	listOrganizationPointsUseCase usecase.ListOrganizationPointsUseCase,
 	log *slog.Logger,
 ) *controller {
 	return &controller{
-		log:                       log,
-		createOrganizationUseCase: createOrganizationUseCase,
+		log:                           log,
+		createOrganizationUseCase:     createOrganizationUseCase,
+		listOrganizationPointsUseCase: listOrganizationPointsUseCase,
 	}
 }

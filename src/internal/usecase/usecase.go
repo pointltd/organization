@@ -28,3 +28,7 @@ type CreateOrganizationUseCase interface {
 type CreatePointUseCase interface {
 	Execute(name string, organizationId string) (entity.Point, error)
 }
+
+type ListOrganizationPointsUseCase interface {
+	Execute(organizationId string) ([]entity.Point, error)
+}

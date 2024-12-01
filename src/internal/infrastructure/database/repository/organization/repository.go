@@ -12,13 +12,20 @@ var _ _def.OrganizationRepository = (*repository)(nil)
 type repository struct {
 	db                 *pgxpool.Pool
 	organizationMapper mapper.OrganizationMapper
+	pointMapper        mapper.PointMapper
 	log                *slog.Logger
 }
 
-func NewOrganizationRepository(db *pgxpool.Pool, organizationMapper mapper.OrganizationMapper, log *slog.Logger) *repository {
+func NewOrganizationRepository(
+	db *pgxpool.Pool,
+	organizationMapper mapper.OrganizationMapper,
+	pointMapper mapper.PointMapper,
+	log *slog.Logger,
+) *repository {
 	return &repository{
 		db:                 db,
 		organizationMapper: organizationMapper,
+		pointMapper:        pointMapper,
 		log:                log,
 	}
 }

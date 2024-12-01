@@ -50,6 +50,7 @@ func (c *controllerProvider) OrganizationController() controller.OrganizationCon
 	if c.organizationController == nil {
 		c.organizationController = organizationController.NewOrganizationController(
 			c.serviceProvider.CreateOrganizationUseCase(),
+			c.serviceProvider.ListOrganizationPointsUseCase(),
 			c.serviceProvider.log,
 		)
 	}
