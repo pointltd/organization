@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	ID        string         `db:"id"`
+	Id        string         `db:"id"`
 	FirstName string         `db:"first_name"`
 	LastName  sql.NullString `db:"last_name"`
 	Email     string         `db:"email"`

@@ -24,3 +24,7 @@ type ListUserOrganizationsUseCase interface {
 type CreateOrganizationUseCase interface {
 	Execute(name string, ownerId string) (entity.Organization, error)
 }
+
+type CreatePointUseCase interface {
+	Execute(name string, organizationId string) (entity.Point, error)
+}

@@ -4,6 +4,7 @@ import (
 	"github.com/pointltd/organization/internal/infrastructure/http/controller"
 	authController "github.com/pointltd/organization/internal/infrastructure/http/controller/auth"
 	organizationController "github.com/pointltd/organization/internal/infrastructure/http/controller/organization"
+	pointController "github.com/pointltd/organization/internal/infrastructure/http/controller/point"
 	userController "github.com/pointltd/organization/internal/infrastructure/http/controller/user"
 )
 
@@ -12,6 +13,7 @@ type controllerProvider struct {
 	authController         controller.AuthController
 	userController         controller.UserController
 	organizationController controller.OrganizationController
+	pointController        controller.PointController
 }
 
 func newControllerProvider(serviceProvider *serviceProvider) *controllerProvider {
@@ -54,4 +56,15 @@ func (c *controllerProvider) OrganizationController() controller.OrganizationCon
 
 	return c.organizationController
 
+}
+
+func (c *controllerProvider) PointController() controller.PointController {
+	if c.pointController == nil {
+		c.pointController = pointController.NewPointController(
+			c.serviceProvider.CreatePointUseCase(),
+			c.serviceProvider.log,
+		)
+	}
+
+	return c.pointController
 }

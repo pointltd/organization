@@ -16,7 +16,7 @@ func (r *repository) Save(user entity.User) (entity.User, error) {
 		return user, err
 	}
 
-	user.ID = id.String()
+	user.Id = id.String()
 
 	query :=
 		`INSERT INTO users (id, password, first_name, last_name, email, phone, created_at, updated_at, deleted_at) 

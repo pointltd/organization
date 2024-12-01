@@ -16,7 +16,7 @@ func (r *repository) Save(organization entity.Organization) (entity.Organization
 		return organization, err
 	}
 
-	organization.ID = id.String()
+	organization.Id = id.String()
 	query := `INSERT INTO organizations (id, name, owner_id, created_at, updated_at, deleted_at) 
 			VALUES (@id, @name, @owner_id, @created_at, @updated_at, @deleted_at)
 			RETURNING *`
@@ -24,7 +24,6 @@ func (r *repository) Save(organization entity.Organization) (entity.Organization
 	args := r.organizationMapper.MapEntityToArg(organization)
 
 	row, err := r.db.Query(context.Background(), query, args)
-
 	if err != nil {
 		r.log.Error(fmt.Sprintf("error saving organization: %v", err))
 		return organization, err
@@ -33,7 +32,6 @@ func (r *repository) Save(organization entity.Organization) (entity.Organization
 	defer row.Close()
 
 	organizationModel, err := pgx.CollectOneRow(row, pgx.RowToStructByName[model.Organization])
-
 	if err != nil {
 		r.log.Error(fmt.Sprintf("error mapping organization model: %v", err))
 		return organization, err

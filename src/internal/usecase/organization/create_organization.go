@@ -28,7 +28,7 @@ func NewCreateOrganizationUseCase(
 func (u createOrganizationUseCase) Execute(name string, ownerId string) (entity.Organization, error) {
 	organization := entity.Organization{
 		Name:    name,
-		OwnerID: ownerId,
+		OwnerId: ownerId,
 	}
 
 	timestamps := entity.Timestamp{

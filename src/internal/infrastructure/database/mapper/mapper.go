@@ -15,3 +15,8 @@ type OrganizationMapper interface {
 	MapModelToEntity(model model.Organization) entity.Organization
 	MapEntityToArg(organization entity.Organization) pgx.NamedArgs
 }
+
+type PointMapper interface {
+	MapModelToEntity(model model.Point) entity.Point
+	MapEntityToArg(point entity.Point) pgx.NamedArgs
+}

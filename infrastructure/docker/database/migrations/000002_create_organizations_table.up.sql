@@ -10,4 +10,4 @@ CREATE TABLE organizations
     CONSTRAINT fk_users_owner FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE RESTRICT
 );
 
-CREATE INDEX idx_organizations_owner_id ON organizations (owner_id);
+CREATE INDEX organizations_owner_id_index ON organizations (owner_id);

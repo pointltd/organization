@@ -39,7 +39,7 @@ func (m *userMapper) MapModelToEntity(model model.User) entity.User {
 	}
 
 	var user = entity.User{
-		ID:       model.ID,
+		Id:       model.Id,
 		Password: model.Password,
 		Info: entity.UserInfo{
 			FirstName: model.FirstName,
@@ -57,7 +57,7 @@ func (m *userMapper) MapModelToEntity(model model.User) entity.User {
 
 func (m *userMapper) MapEntityToArg(user entity.User) pgx.NamedArgs {
 	args := pgx.NamedArgs{
-		"id":         user.ID,
+		"id":         user.Id,
 		"password":   user.Password,
 		"first_name": user.Info.FirstName,
 		"email":      user.Contacts.Email,

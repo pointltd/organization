@@ -12,3 +12,7 @@ type UserRepository interface {
 type OrganizationRepository interface {
 	Save(organization entity.Organization) (entity.Organization, error)
 }
+
+type PointRepository interface {
+	Save(point entity.Point) (entity.Point, error)
+}

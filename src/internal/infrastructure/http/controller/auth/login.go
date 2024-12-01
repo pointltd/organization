@@ -31,7 +31,7 @@ func (c *controller) Login(ctx echo.Context) error {
 	}
 
 	claims := &jwtCustomClaims{
-		user.ID,
+		user.Id,
 		user.Contacts.Email,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),

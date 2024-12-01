@@ -31,9 +31,9 @@ func (m *organizationMapper) MapModelToEntity(model model.Organization) entity.O
 	}
 
 	var organization = entity.Organization{
-		ID:        model.ID,
+		Id:        model.Id,
 		Name:      model.Name,
-		OwnerID:   model.OwnerID,
+		OwnerId:   model.OwnerId,
 		Timestamp: timestamp,
 	}
 
@@ -42,9 +42,9 @@ func (m *organizationMapper) MapModelToEntity(model model.Organization) entity.O
 
 func (m *organizationMapper) MapEntityToArg(organization entity.Organization) pgx.NamedArgs {
 	args := pgx.NamedArgs{
-		"id":       organization.ID,
+		"id":       organization.Id,
 		"name":     organization.Name,
-		"owner_id": organization.OwnerID,
+		"owner_id": organization.OwnerId,
 	}
 
 	if organization.Timestamp.CreatedAt != nil {

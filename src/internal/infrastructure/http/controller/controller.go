@@ -17,3 +17,7 @@ type UserController interface {
 type OrganizationController interface {
 	CreateOrganization(ctx echo.Context) error
 }
+
+type PointController interface {
+	CreatePoint(ctx echo.Context) error
+}

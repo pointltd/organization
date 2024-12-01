@@ -5,12 +5,15 @@ import (
 	"github.com/pointltd/organization/internal/domain/repository"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	organizationMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/organization"
+	pointMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/point"
 	userMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/user"
 	organizationRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/organization"
+	pointRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/point"
 	userRepository "github.com/pointltd/organization/internal/infrastructure/database/repository/user"
 	"github.com/pointltd/organization/internal/usecase"
 	authenticateUserUseCase "github.com/pointltd/organization/internal/usecase/auth"
 	createOrganizationUseCase "github.com/pointltd/organization/internal/usecase/organization"
+	createPointUseCase "github.com/pointltd/organization/internal/usecase/point"
 	createUserUseCase "github.com/pointltd/organization/internal/usecase/user"
 	"log/slog"
 )
@@ -22,15 +25,18 @@ type serviceProvider struct {
 
 	userMapper         mapper.UserMapper
 	organizationMapper mapper.OrganizationMapper
+	pointMapper        mapper.PointMapper
 
 	userRepository         repository.UserRepository
 	organizationRepository repository.OrganizationRepository
+	pointRepository        repository.PointRepository
 
 	authenticateUserUseCase      usecase.AuthenticateUserUseCase
 	createUserUseCase            usecase.CreateUserUseCase
 	listUsersUseCase             usecase.ListUsersUseCase
 	createOrganizationUseCase    usecase.CreateOrganizationUseCase
 	listUserOrganizationsUseCase usecase.ListUserOrganizationsUseCase
+	createPointUseCase           usecase.CreatePointUseCase
 }
 
 func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
@@ -56,6 +62,14 @@ func (s *serviceProvider) OrganizationMapper() mapper.OrganizationMapper {
 	return s.organizationMapper
 }
 
+func (s *serviceProvider) PointMapper() mapper.PointMapper {
+	if s.pointMapper == nil {
+		s.pointMapper = pointMapper.NewPointMapper()
+	}
+
+	return s.pointMapper
+}
+
 func (s *serviceProvider) UserRepository() repository.UserRepository {
 	if s.userRepository == nil {
 		s.userRepository = userRepository.NewUserRepository(s.db, s.UserMapper(), s.OrganizationMapper(), s.log)
@@ -71,6 +85,14 @@ func (s *serviceProvider) OrganizationRepository() repository.OrganizationReposi
 
 	return s.organizationRepository
 
+}
+
+func (s *serviceProvider) PointRepository() repository.PointRepository {
+	if s.pointRepository == nil {
+		s.pointRepository = pointRepository.NewPointRepository(s.db, s.PointMapper(), s.log)
+	}
+
+	return s.pointRepository
 }
 
 func (s *serviceProvider) AuthenticateUserUseCase() usecase.AuthenticateUserUseCase {
@@ -117,4 +139,15 @@ func (s *serviceProvider) ListUserOrganizationsUseCase() usecase.ListUserOrganiz
 	}
 
 	return s.listUserOrganizationsUseCase
+}
+
+func (s *serviceProvider) CreatePointUseCase() usecase.CreatePointUseCase {
+	if s.createPointUseCase == nil {
+		s.createPointUseCase = createPointUseCase.NewCreatePointUseCase(
+			s.PointRepository(),
+			s.log,
+		)
+	}
+
+	return s.createPointUseCase
 }
