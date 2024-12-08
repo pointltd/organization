@@ -33,12 +33,6 @@ func NewApp(logger *slog.Logger, appConfig config.AppConfig) (*App, error) {
 }
 
 func (a *App) init() error {
-	a.logger.Info("Initializing app")
-	a.logger.Info(a.config.Env())
-	a.logger.Info(a.config.JwtSecret())
-	a.logger.Info(a.config.DatabaseUrl())
-	a.logger.Info(a.config.Port())
-	a.logger.Info("App initialized")
 	a.initDatabase()
 	a.serviceProvider = newServiceProvider(a.db, a.logger, a.config)
 	a.controllerProvider = newControllerProvider(a.serviceProvider)
