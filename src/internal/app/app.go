@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"os"
 
@@ -50,7 +49,6 @@ func (a *App) initDatabase() {
 }
 
 func (a *App) RunHttpServer() error {
-	a.logger.Info(fmt.Sprintf("Secret JWT: %s", os.Getenv("JWT_SECRET")))
 	a.httpServer = NewHttpServer(a.logger, a)
 	return a.httpServer.Start()
 }
