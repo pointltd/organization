@@ -6,7 +6,7 @@ import (
 )
 
 func (c *controller) ListUserOrganizations(ctx echo.Context) error {
-	c.log.Debug("ListUserOrganizations invoked")
+	c.log.Info("ListUserOrganizations invoked")
 	users, err := c.listUserOrganizationsUseCase.Execute(
 		ctx.Param("id"),
 	)
