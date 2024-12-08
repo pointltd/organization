@@ -25,5 +25,6 @@ func NewListUserOrganizationsUseCase(
 }
 
 func (u listUserOrganizationsUseCase) Execute(userId string) ([]entity.Organization, error) {
+	u.log.Info("ListUserOrganizationsUseCase.Execute invoked with id: ", userId)
 	return u.userRepository.GetOrganizations(userId)
 }
