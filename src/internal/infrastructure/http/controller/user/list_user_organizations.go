@@ -8,7 +8,7 @@ import (
 
 func (c *controller) ListUserOrganizations(ctx echo.Context) error {
 	c.log.Info(fmt.Sprintf("ListUserOrganizations invoked with id: %s", ctx.Param("id")))
-	users, err := c.listUserOrganizationsUseCase.Execute(
+	organizations, err := c.listUserOrganizationsUseCase.Execute(
 		ctx.Param("id"),
 	)
 
@@ -16,5 +16,5 @@ func (c *controller) ListUserOrganizations(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return ctx.JSON(http.StatusOK, users)
+	return ctx.JSON(http.StatusOK, organizations)
 }
