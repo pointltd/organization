@@ -20,3 +20,8 @@ func GetJwtConfig() echojwt.Config {
 		SigningKey: []byte(os.Getenv("JWT_SECRET")),
 	}
 }
+
+func GetClaims(ctx echo.Context) JwtCustomClaims {
+	user := ctx.Get("user").(*jwt.Token)
+	return *user.Claims.(*JwtCustomClaims)
+}
