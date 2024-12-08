@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/pointltd/organization/internal/domain/entity"
 	"github.com/pointltd/organization/internal/domain/repository"
 	def "github.com/pointltd/organization/internal/usecase"
@@ -25,6 +26,6 @@ func NewListUserOrganizationsUseCase(
 }
 
 func (u listUserOrganizationsUseCase) Execute(userId string) ([]entity.Organization, error) {
-	u.log.Info("ListUserOrganizationsUseCase.Execute invoked with id: ", userId)
+	u.log.Info(fmt.Sprintf("ListUserOrganizationsUseCase.Execute invoked with id: %s", userId))
 	return u.userRepository.GetOrganizations(userId)
 }

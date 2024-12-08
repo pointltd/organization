@@ -1,12 +1,13 @@
 package user
 
 import (
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 func (c *controller) ListUserOrganizations(ctx echo.Context) error {
-	c.log.Info("ListUserOrganizations invoked with id: ", ctx.Param("id"))
+	c.log.Info(fmt.Sprintf("ListUserOrganizations invoked with id: %s", ctx.Param("id")))
 	users, err := c.listUserOrganizationsUseCase.Execute(
 		ctx.Param("id"),
 	)
