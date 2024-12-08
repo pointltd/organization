@@ -7,7 +7,7 @@ import (
 
 func RegisterUserRoutes(group *echo.Group, controller controller.UserController, jwtMiddleware echo.MiddlewareFunc) {
 	userGroup := group.Group("/users")
-	userGroup.Use(jwtMiddleware)
+	//userGroup.Use(jwtMiddleware)
 	userGroup.GET("", controller.ListUsers)
 	userGroup.GET("/:id", controller.GetUser)
 	userGroup.POST("", controller.CreateUser)
