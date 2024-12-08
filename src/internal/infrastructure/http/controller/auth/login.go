@@ -47,5 +47,6 @@ func (c *controller) Login(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusOK, echo.Map{
 		"token": t,
+		"user":  user,
 	})
 }
