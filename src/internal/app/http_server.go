@@ -8,7 +8,6 @@ import (
 	"github.com/pointltd/organization/internal/infrastructure/http"
 	"github.com/pointltd/organization/internal/infrastructure/http/route"
 	"log/slog"
-	"os"
 )
 
 type httpServer struct {
@@ -28,7 +27,7 @@ func (s *httpServer) Start() error {
 
 	e.Validator = &http.Validator{Validator: validator.New()}
 
-	var jwtMiddleware = echojwt.WithConfig(http.GetJwtConfig())
+	var jwtMiddleware = echojwt.WithConfig(http.GetJwtConfig(s.app.config.JwtSecret()))
 
 	// Middlewares
 	e.Use(middleware.Logger())
@@ -42,10 +41,7 @@ func (s *httpServer) Start() error {
 	route.RegisterPointRoutes(api, s.app.controllerProvider.PointController(), jwtMiddleware)
 
 	// Port configuration
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
+	port := s.app.config.Port()
 
 	err := e.Start(":" + port)
 	if err != nil {

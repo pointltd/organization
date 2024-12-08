@@ -4,7 +4,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
-	"os"
 )
 
 type JwtCustomClaims struct {
@@ -12,12 +11,12 @@ type JwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func GetJwtConfig() echojwt.Config {
+func GetJwtConfig(jwtSecret string) echojwt.Config {
 	return echojwt.Config{
 		NewClaimsFunc: func(c echo.Context) jwt.Claims {
 			return new(JwtCustomClaims)
 		},
-		SigningKey: []byte(os.Getenv("JWT_SECRET")),
+		SigningKey: []byte(jwtSecret),
 	}
 }
 

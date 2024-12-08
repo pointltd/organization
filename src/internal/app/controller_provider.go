@@ -25,8 +25,10 @@ func newControllerProvider(serviceProvider *serviceProvider) *controllerProvider
 func (c *controllerProvider) AuthController() controller.AuthController {
 	if c.authController == nil {
 		c.authController = authController.NewAuthController(
+			c.serviceProvider.log,
 			c.serviceProvider.AuthenticateUserUseCase(),
 			c.serviceProvider.CreateUserUseCase(),
+			c.serviceProvider.appConfig,
 		)
 	}
 

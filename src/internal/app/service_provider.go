@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/pointltd/organization/internal/config"
 	"github.com/pointltd/organization/internal/domain/repository"
 	"github.com/pointltd/organization/internal/infrastructure/database/mapper"
 	organizationMapper "github.com/pointltd/organization/internal/infrastructure/database/mapper/organization"
@@ -22,7 +23,8 @@ import (
 type serviceProvider struct {
 	db *pgxpool.Pool
 
-	log *slog.Logger
+	log       *slog.Logger
+	appConfig config.AppConfig
 
 	userMapper         mapper.UserMapper
 	organizationMapper mapper.OrganizationMapper
@@ -41,10 +43,11 @@ type serviceProvider struct {
 	listOrganizationPointsUseCase usecase.ListOrganizationPointsUseCase
 }
 
-func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger) *serviceProvider {
+func newServiceProvider(db *pgxpool.Pool, logger *slog.Logger, appConfig config.AppConfig) *serviceProvider {
 	return &serviceProvider{
-		db:  db,
-		log: logger,
+		db:        db,
+		log:       logger,
+		appConfig: appConfig,
 	}
 }
 

@@ -2,15 +2,17 @@ package main
 
 import (
 	"github.com/pointltd/organization/internal/app"
+	"github.com/pointltd/organization/internal/config"
 	"os"
 
 	"log/slog"
 )
 
 func main() {
-	logger := initLogger()
+	appConfig := config.NewAppConfig()
+	logger := initLogger(appConfig)
 
-	a, err := app.NewApp(logger)
+	a, err := app.NewApp(logger, appConfig)
 	if err != nil {
 		logger.Error("failed to init app: %s", err.Error())
 		return
@@ -23,8 +25,8 @@ func main() {
 	}
 }
 
-func initLogger() *slog.Logger {
-	if os.Getenv("ENV") == "local" {
+func initLogger(appConfig config.AppConfig) *slog.Logger {
+	if appConfig.Env() == "local" {
 		return slog.New(slog.NewTextHandler(os.Stdout, nil))
 	}
 
