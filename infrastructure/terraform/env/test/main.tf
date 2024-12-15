@@ -75,6 +75,10 @@ variable "ORGANIZATION_IMAGE_TAG" {
 module "organization-app" {
   source = "../../modules/application"
 
+  providers = {
+    yandex = yandex
+  }
+
   container_name = local.container_name
   registry_id    = local.registry_id
   db_url_secret_id = local.db_url_secret_id
