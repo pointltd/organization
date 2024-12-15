@@ -22,3 +22,8 @@ resource "yandex_serverless_container" "organization-app-container" {
     url = "${var.registry_id}/organization-app:${var.ORGANIZATION_IMAGE_TAG}"
   }
 }
+
+provider "yandex" {
+  zone      = local.zone
+  folder_id = local.target_folder_id
+}
