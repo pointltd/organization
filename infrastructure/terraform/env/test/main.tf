@@ -72,39 +72,14 @@ variable "ORGANIZATION_IMAGE_TAG" {
   type      = string
 }
 
-# module "organization-app" {
-#   source = "../../modules/application"
-#
-#   container_name = local.container_name
-#   registry_id    = local.registry_id
-#   db_url_secret_id = local.db_url_secret_id
-#   jwt_secret_id    = local.jwt_secret_id
-#   db_url_secret_version_id = local.db_url_secret_version_id
-#   jwt_secret_version_id    = local.jwt_secret_version_id
-#   ORGANIZATION_IMAGE_TAG = var.ORGANIZATION_IMAGE_TAG
-# }
+module "organization-app" {
+  source = "../../modules/application"
 
-resource "yandex_serverless_container" "organization-app-container" {
-  name               = local.container_name
-  service_account_id = yandex_iam_service_account.organization-sa.id
-  memory             = 512  # Specify memory in MB
-  cores              = 1
-
-  secrets {
-    environment_variable = "DATABASE_URL"
-    id                   = local.db_url_secret_id
-    key                  = "DATABASE_URL"
-    version_id           = "e6qbk89fofussm10ksu5"
-  }
-
-  secrets {
-    environment_variable = "JWT_SECRET"
-    id                   = local.jwt_secret_id
-    key                  = "JWT_SECRET"
-    version_id           = "e6qqunh4ra3ee11b24a8"
-  }
-
-  image {
-    url = "${local.registry_id}/organization-app:${var.ORGANIZATION_IMAGE_TAG}"
-  }
+  container_name = local.container_name
+  registry_id    = local.registry_id
+  db_url_secret_id = local.db_url_secret_id
+  jwt_secret_id    = local.jwt_secret_id
+  db_url_secret_version_id = local.db_url_secret_version_id
+  jwt_secret_version_id    = local.jwt_secret_version_id
+  ORGANIZATION_IMAGE_TAG = var.ORGANIZATION_IMAGE_TAG
 }
