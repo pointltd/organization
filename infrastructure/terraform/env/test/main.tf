@@ -48,10 +48,6 @@ module "yandex" {
   zone = local.zone
 }
 
-variable "ORGANIZATION_IMAGE_TAG" {
-  type      = string
-}
-
 module "organization-app" {
   source = "../../modules/application"
 
