@@ -7,11 +7,6 @@ terraform {
   }
 }
 
-provider "yandex" {
-  zone      = "ru-central1-a"
-  folder_id = "b1g0k22us62vt6kut949"
-}
-
 resource "yandex_serverless_container" "organization-app-container" {
   name               = var.container_name
   service_account_id = yandex_iam_service_account.organization-sa.id
