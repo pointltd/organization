@@ -85,5 +85,6 @@ module "organization-app" {
   jwt_secret_id    = local.jwt_secret_id
   db_url_secret_version_id = local.db_url_secret_version_id
   jwt_secret_version_id    = local.jwt_secret_version_id
+  service_account_id      = yandex_iam_service_account.organization-sa.id
   ORGANIZATION_IMAGE_TAG = var.ORGANIZATION_IMAGE_TAG
 }

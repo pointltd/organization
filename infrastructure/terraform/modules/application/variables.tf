@@ -28,6 +28,12 @@ variable "registry_id" {
     type        = string
 }
 
+variable "service_account_id" {
+    description = "ID of the service account"
+    type        = string
+}
+
 variable "ORGANIZATION_IMAGE_TAG" {
+  description = "Tag of the image. Set by the CI/CD system"
   type      = string
 }
