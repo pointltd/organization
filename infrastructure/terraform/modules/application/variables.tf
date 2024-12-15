@@ -27,3 +27,7 @@ variable "registry_id" {
     description = "ID of the container registry"
     type        = string
 }
+
+variable "ORGANIZATION_IMAGE_TAG" {
+  type      = string
+}
