@@ -24,6 +24,6 @@ resource "yandex_serverless_container" "organization-app-container" {
 }
 
 provider "yandex" {
-  zone      = local.zone
-  folder_id = local.target_folder_id
+  zone      = "ru-central1-a"
+  folder_id = "b1g0k22us62vt6kut949"
 }
