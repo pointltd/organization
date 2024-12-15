@@ -71,15 +71,15 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/test
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/test
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/test
 
   migrate:
     name: Migrate database
