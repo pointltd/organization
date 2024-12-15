@@ -1,3 +1,8 @@
+variable "folder_id" {
+    description = "ID of the folder"
+    type        = string
+}
+
 variable "container_name" {
     description = "Name of the container"
     type        = string
@@ -25,11 +30,6 @@ variable "jwt_secret_version_id" {
 
 variable "registry_id" {
     description = "ID of the container registry"
-    type        = string
-}
-
-variable "service_account_id" {
-    description = "ID of the service account"
     type        = string
 }
 
