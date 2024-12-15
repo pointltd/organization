@@ -2,8 +2,8 @@ name: CI/CD
 
 on:
   push:
-    branches: 
-      - main
+#    branches:
+#      - main
 
 jobs:
   docker:
@@ -71,15 +71,15 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/env/test
 
       - name: Terraform Plan
         run: terraform plan
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/env/test
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        working-directory: ./infrastructure/terraform
+        working-directory: ./infrastructure/terraform/env/test
 
   migrate:
     name: Migrate database
