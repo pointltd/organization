@@ -41,11 +41,12 @@ terraform {
   }
 }
 
-provider "yandex" {
-  zone      = local.zone
-  folder_id = local.folder_id
-}
+module "yandex" {
+  source = "../../modules/provider"
 
+  folder_id = local.folder_id
+  zone = local.zone
+}
 
 variable "ORGANIZATION_IMAGE_TAG" {
   type      = string
