@@ -9,7 +9,7 @@ terraform {
 
 resource "yandex_serverless_container" "organization-app-container" {
   name               = var.container_name
-  service_account_id = yandex_iam_service_account.organization-sa.id
+  service_account_id = var.service_account_id
   memory             = 512  # Specify memory in MB
   cores              = 1
 
